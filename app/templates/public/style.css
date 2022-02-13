@@ -1,0 +1,15 @@
+nav {
+    padding: 16px;
+}
+.search {
+    width: 33%;
+    margin-left: 16px;
+}
+.dropdown {
+    float: right;
+    box-sizing: border-box;
+}
+.tools {
+    margin: 16px;
+}
+
