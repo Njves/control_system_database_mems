@@ -1,0 +1,24 @@
+.content {
+    padding-top: 40px;
+    height: calc(100% - 56px);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-header {
+    text-align: center;
+}
+.buttons {
+    text-align: center;
+}
+.btn-sign-in {
+    margin-top: 8px;
+}
+button {
+    margin-top: 8px;
+}
+.btn-forgot {
+    margin-top: 8px;
+}
