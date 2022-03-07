@@ -1,0 +1,16 @@
+.search {
+    width: 33%;
+    margin-left: 16px;
+}
+.dropdown {
+    float: right;
+    box-sizing: border-box;
+}
+.tools {
+    margin: 16px;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px; /\* половина ширины и высоты \*/
+}

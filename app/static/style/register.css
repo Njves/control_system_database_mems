@@ -1,0 +1,23 @@
+.content {
+    padding: 8px;
+    margin-top: 32px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-header {
+    text-align: center;
+}
+.buttons {
+    text-align: center;
+}
+.btn-sign-in {
+    margin-top: 8px;
+}
+button {
+    margin-top: 8px;
+}
+.btn-forgot {
+    margin-top: 8px;
+}
