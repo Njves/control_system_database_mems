@@ -8,11 +8,11 @@ def index():
     return render_template('public/public.html')
 
 
-@app.route('/registration', methods=['POST', 'GET'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     return render_template('register/register.html')
 
 
-@app.route('/detail_mem', methods=['POST', 'GET'])
-def detail():
-    return render_template('detail_mem/detail_mem.html')
+@app.route('/account', methods=['POST', 'GET'])
+def account():
+    return render_template('account/account.html')
