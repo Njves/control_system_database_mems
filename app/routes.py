@@ -7,6 +7,12 @@ from app import app
 def index():
     return render_template('public/public.html')
 
-@app.route('/register', methods=['POST', 'GET'])
+
+@app.route('/registration', methods=['POST', 'GET'])
 def register():
     return render_template('register/register.html')
+
+
+@app.route('/detail_mem', methods=['POST', 'GET'])
+def detail():
+    return render_template('detail_mem/detail_mem.html')
