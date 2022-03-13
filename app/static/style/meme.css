@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 56px);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+img {
+    max-height: 50%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+form {
+    width: 100%;
+    max-width: 650px;
+}
+
+.button-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 13px;
+}
+
+.container input {
+    margin-top: 13px;
+}
+  
+@media (max-width: 992px) {
+    #login  {
+        display: none;
+    }
+}

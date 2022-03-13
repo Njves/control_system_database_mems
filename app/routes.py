@@ -16,3 +16,16 @@ def register():
 @app.route('/account', methods=['POST', 'GET'])
 def account():
     return render_template('account/account.html')
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    return render_template('signIn/signIn.html')
+
+
+@app.route('/meme/<meme_id>')
+def mem(meme_id):
+    return render_template('meme/meme.html')
+
+
+
