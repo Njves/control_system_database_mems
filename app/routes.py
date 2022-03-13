@@ -19,7 +19,7 @@ def account():
 
 
 @app.route('/login', methods=['POST', 'GET'])
-def sign_in():
+def login():
     return render_template('signIn/signIn.html')
 
 
