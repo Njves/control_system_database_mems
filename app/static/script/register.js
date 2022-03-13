@@ -1,11 +1,12 @@
-const requestUrl = 'http://127.0.0.1:5000/reg';
+const requestUrl = 'http://127.0.0.1:5000/register';
 
 const xhr = new XMLHttpRequest();
 
-xhr.open('POST', requestUrl);
-
-xhr.onload() = () => {
-
+document.getElementById('register_button').addEventListener('click', function(event){
+    xhr.open('GET', requestUrl);
+    xhr.send();
+});
+xhr.onload = function() {
+        console.log(xhr.response)
 }
 
-xhr.send()
