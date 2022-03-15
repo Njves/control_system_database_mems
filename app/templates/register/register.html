@@ -9,27 +9,34 @@ Register
 {% endblock %}
 {% block content %}
 <link href="{{ url_for('static', filename='style/register.css', v=1) }}" rel="stylesheet" />
-<div class="content">
-    <h2 class="text-header">Register</h2>
-    <label for="basic-username" class="form-label">Username</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="basic-username" aria-describedby="basic-addon3">
-    </div>
 
-    <label for="basic-email" class="form-label">Email</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="basic-email" aria-describedby="basic-addon3">
-    </div>
-
-    <label for="basic-password" class="form-label">Password</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="basic-password" aria-describedby="basic-addon3">
-    </div>
-    <div class="buttons">
-        <a href="#" class="btn-forgot">Forgot password?</a><br/>
-        <button id="register_button" type="button" class="btn btn-success">Register</button><br/>
-        <a href="#" class="btn-sign-in">Sign in CSDM?</a><br/>
-    </div>
+<div class="container">
+    <form method="post" action="/register">
+        <div class="form-group">
+            <p class="text-center">Register in CSDM</p>
+        </div>
+        <div class="form-group">
+            <p for="username" class="text-start" >Username</p>
+            <input type="text" class="form-control" name="username" id="username">
+        </div>
+        <div class="form-group">
+            <p for="email" class="text-start">Email</p>
+            <input type="text" class="form-control" name="email" id="email">
+        </div>
+        <div class="form-group">
+            <p for="Password" class="text-start">Password</p>
+            <input type="password" name="password" class="form-control" id="password">
+            <p for="password-repeat" class="text-start">Password repeat</p>
+            <input type="password" class="form-control" name="password_repeat" id="password-repeat">
+            <div>
+                <a href="#">Forgot password?</a>
+                <div class="button-wrapper">
+                    <button class="btn btn-success" name="submit">Register</button>
+                </div>
+                <a href="{{ url_for('login') }}">Sign in CSDM</a>
+            </div>
+        </div>
+    </form>
 </div>
 <script src="{{ url_for('static', filename='script/register.js', v=1) }}"></script>
 {% endblock %}
