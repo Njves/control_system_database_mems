@@ -4,6 +4,10 @@ nav {
 body, html, .main {
     width: 100%;
     height: 100%;
-
 }
 
+@media (max-width: 992px) {
+    #login  {
+        display: none;
+    }
+}

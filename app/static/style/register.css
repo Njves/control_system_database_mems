@@ -1,7 +1,7 @@
 
 .container {
     height: calc(100% - 56px);
-    min-height: 400px;
+    min-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -12,7 +12,7 @@ Account
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <div class="contain">
     <div class="profile">
-        <img src="images/account.jpg" alt="">
+        <img src="{{ url_for('static', filename='images/avatars/egor.jpg') }}" alt="" id="avatar">
         <div class="information">
             <p class="name">Andrew Scot</p>
             <p class="added">Pictures added 15k</p>
@@ -57,7 +57,7 @@ Account
         </div>
         <!-- Конец строки поиска -->
     </div>
-    <div class="containerTags">
+    <div class="containerTags" draggable="true">
         <!-- Grid сетка-->
         <!-- div одного элемента
         Типа так получается что есть контейнер "row" и сколько в нем "col" столько будет колонок -->
@@ -184,4 +184,5 @@ Account
 
     </div>
 </div>
+<script src="{{ url_for('static', filename='script/account.js', v=1) }}"></script>
 {% endblock %}
