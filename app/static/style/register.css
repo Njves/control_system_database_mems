@@ -1,9 +1,14 @@
-.content {
-    padding: 8px;
-    margin-top: 32px;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
+.container {
+    display: flex;
+    height: calc(100% - 56px);
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+form {
+    width: 650px;
+    max-width: 650px;
 }
 
 .text-header {
@@ -20,4 +25,10 @@ button {
 }
 .btn-forgot {
     margin-top: 8px;
+}
+
+@media (max-width: 992px) {
+    #login  {
+        display: none;
+    }
 }

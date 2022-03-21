@@ -9,27 +9,29 @@ Register
 {% endblock %}
 {% block content %}
 <link href="{{ url_for('static', filename='style/register.css', v=1) }}" rel="stylesheet" />
-<div class="content">
-    <h2 class="text-header">Register</h2>
-    <label for="basic-username" class="form-label">Username</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="basic-username" aria-describedby="basic-addon3">
-    </div>
+<div class="container">
+    <form>
+        <h2 class="text-header">Register</h2>
+        <label for="basic-username" class="form-label">Username</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="basic-username" aria-describedby="basic-addon3">
+        </div>
 
-    <label for="basic-email" class="form-label">Email</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="basic-email" aria-describedby="basic-addon3">
-    </div>
+        <label for="basic-email" class="form-label">Email</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="basic-email" aria-describedby="basic-addon3">
+        </div>
 
-    <label for="basic-password" class="form-label">Password</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="basic-password" aria-describedby="basic-addon3">
-    </div>
-    <div class="buttons">
-        <a href="#" class="btn-forgot">Forgot password?</a><br/>
-        <button id="register_button" type="button" class="btn btn-success">Register</button><br/>
-        <a href="#" class="btn-sign-in">Sign in CSDM?</a><br/>
-    </div>
+        <label for="basic-password" class="form-label">Password</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="basic-password" aria-describedby="basic-addon3">
+        </div>
+        <div class="buttons">
+            <a href="#" class="btn-forgot">Forgot password?</a><br/>
+            <button id="register_button" type="button" class="btn btn-success">Register</button><br/>
+            <a href="#" class="btn-sign-in">Sign in CSDM?</a><br/>
+        </div>
+    </form>
 </div>
 <script src="{{ url_for('static', filename='script/register.js', v=1) }}"></script>
 {% endblock %}

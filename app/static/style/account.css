@@ -75,6 +75,42 @@ nav {
     justify-content: center;
 }
 
+.addMem {
+    position: fixed;
+    left: calc(50% - 115px);
+    top: calc(100% - 90px);
+    width: 230px;
+    height: 70px;
+    border: none;
+    background-color: #1C1B1B;
+    color: #FFFFFF;
+    border-radius: 3em;
+    text-decoration: none;
+    display: inline-block;
+    z-index: 1;
+}
+
+@keyframes small-button {
+    50% {
+        font-size: 15px;
+        height: 65px;
+        width: 220px;
+        left: calc(50% - 110px);
+        top: calc(100% - 87px);
+    }
+    100%{
+        font-size: 1em;
+        width: 230px;
+        height: 70px;
+        left: calc(50% - 115px);
+        top: calc(100% - 90px);
+    }
+}
+
+.button-animation {
+    animation: small-button 250ms;
+}
+
 @media (max-width: 1919px) {
     .col {
         max-width: 20%;
