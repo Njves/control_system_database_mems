@@ -1,4 +1,3 @@
-
 .container {
     height: calc(100% - 56px);
     min-height: 500px;
@@ -41,6 +40,9 @@
 form {
     width: 650px;
     max-width: 650px;
+}
+.btn-forgot {
+    margin-top: 8px;
 }
 
 @media (max-width: 992px) {
