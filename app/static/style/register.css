@@ -1,27 +1,45 @@
 .container {
-    display: flex;
     height: calc(100% - 56px);
+    min-height: 500px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 400px;
+
+}
+
+.container p.text-center{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.container p.text-start {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.container input {
+    margin-bottom: 16px;
+}
+
+.container a {
+    display: block;
+    text-align: center;
+}
+
+.container div a {
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.button-wrapper{
+    display: flex;
+    justify-content: center;
+    padding: 6px 0px;
 }
 
 form {
     width: 650px;
     max-width: 650px;
-}
-
-.text-header {
-    text-align: center;
-}
-.buttons {
-    text-align: center;
-}
-.btn-sign-in {
-    margin-top: 8px;
-}
-button {
-    margin-top: 8px;
 }
 .btn-forgot {
     margin-top: 8px;

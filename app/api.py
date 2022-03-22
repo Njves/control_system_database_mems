@@ -3,8 +3,9 @@ from random import randint
 from app import api_flask
 
 
-class MyRegister(Resource):
-    def get(self, id=0):
-        return randint(1, 10) + (id * 100), 200
+class Registration(Resource):
+    def post(self, username="", email="", password=""):
+        return "{\"username\": \"Egor\", \"email\": \"mrpostik@gmail.com\", \"password\": \"123456\"}"
 
-api_flask.add_resource(MyRegister, "/register", "/register/<int:id>")
+
+api_flask.add_resource(Registration, "/registration")
