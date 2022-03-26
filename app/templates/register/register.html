@@ -17,17 +17,21 @@ Register
         </div>
         <div class="form-group">
             <p for="username" class="text-start" >Username</p>
-            <input type="text" class="form-control" name="username" id="username">
+            <input type="text" class="form-control" name="username" id="username" required="required" maxlength="32">
+            <span class="form__error">* This field must contain no more than 32 characters.</span>
         </div>
         <div class="form-group">
             <p for="email" class="text-start">Email</p>
-            <input type="text" class="form-control" name="email" id="email">
+            <input type="email" class="form-control" name="email" id="email" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" minlength="6" >
+            <span class="form__error">* This field must contain an E-Mail in the format example@site.com (no less than 6 and no more than 32 characters).</span>
         </div>
         <div class="form-group">
             <p for="Password" class="text-start">Password</p>
-            <input type="password" name="password" class="form-control" id="password">
+            <input type="password" name="password" class="form-control" id="password" required="required" minlength="6" maxlength="32">
+            <span class="form__error">* This field must contain at least 6 and no more than 32 characters.</span>
             <p for="password-repeat" class="text-start">Password repeat</p>
-            <input type="password" class="form-control" name="password_repeat" id="password-repeat">
+            <input type="password" class="form-control" name="password_repeat" id="password-repeat" required="required" minlength="6" maxlength="32">
+            <span class="form__error_last">* This field must contain at least 6 and no more than 32 characters.</span>
             <div>
                 <a href="#">Forgot password?</a>
                 <div class="button-wrapper">
