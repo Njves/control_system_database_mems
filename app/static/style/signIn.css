@@ -43,6 +43,23 @@ form {
     max-width: 650px;
 }
 
+input:required:valid {
+  border-color: black;
+}
+
+input:required:invalid {
+  border-color: black;
+}
+
+input:required:focus:valid {
+  border-color: lightgreen;
+  background-size: 25px;
+}
+input:focus:invalid {
+  border-color: red;
+  background-size: 25px;
+}
+
 @media (max-width: 992px) {
     #login  {
         display: none;

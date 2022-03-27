@@ -18,7 +18,7 @@
 }
 
 .container input {
-    margin-bottom: 16px;
+    margin-bottom: 6px;
 }
 
 .container a {
@@ -41,6 +41,47 @@ form {
     width: 650px;
     max-width: 650px;
 }
+
+input:valid {
+  border-color: green;
+}
+
+input:invalid {
+  border-color: red;
+}
+
+input:required:invalid {
+  border-color: black;
+}
+
+input:required:focus:valid {
+  border-color: lightgreen;
+  background-size: 25px;
+}
+
+input:focus:invalid {
+  border-color: red;
+  background-size: 25px;
+}
+
+.form__error {
+  color: gray;
+  text-align: left;
+  font-size: 12px;
+  display: block;
+  margin-top: 3px;
+  margin-bottom: 16px;
+}
+
+.form__error_last {
+  color: gray;
+  text-align: left;
+  font-size: 12px;
+  display: block;
+  margin-top: 3px;
+  margin-bottom: 6px;
+}
+
 .btn-forgot {
     margin-top: 8px;
 }
