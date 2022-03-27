@@ -51,7 +51,7 @@ input:invalid {
 }
 
 input:required:invalid {
-  border-color: orange;
+  border-color: black;
 }
 
 input:required:focus:valid {
@@ -63,8 +63,6 @@ input:focus:invalid {
   border-color: red;
   background-size: 25px;
 }
-
-
 
 .form__error {
   color: gray;

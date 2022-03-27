@@ -44,11 +44,11 @@ form {
 }
 
 input:required:valid {
-  border-color: green;
+  border-color: black;
 }
 
 input:required:invalid {
-  border-color: orange;
+  border-color: black;
 }
 
 input:required:focus:valid {
