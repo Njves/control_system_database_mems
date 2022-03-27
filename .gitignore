@@ -19,10 +19,11 @@ _mailinglist
 docs/_build/
 .vscode
 migrations/
-
+__pycache__
 
 # Coverage reports
 htmlcov/
 .coverage
 .coverage.*
 *,cover
+images/

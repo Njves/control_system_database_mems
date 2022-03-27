@@ -6,6 +6,7 @@ avatar.addEventListener('error', fail);
 const containerTags = document.getElementById('containerTags');
 containerTags.ondragover = allowDrop;
 
+alert('Чел')
 function allowDrop(event) {
     event.preventDefault();
 }

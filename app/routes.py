@@ -1,10 +1,15 @@
+import os
+
 from flask import render_template, request, url_for, flash
 from flask_login import login_user
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
+import config
 from app import app, db
 from app.forms import LoginForm
 from app.models import Account
+from app.service import ImageService
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -53,9 +58,17 @@ def login():
     return render_template('signIn/signIn.html')
 
 
-@app.route('/meme/<meme_id>')
+@app.route('/meme/<meme_id>', methods=['GET', 'POST'])
 def mem(meme_id):
-    return render_template('meme/meme.html')
+    image_service = ImageService()
+    print(request.form.to_dict())
+    print(request.files.to_dict())
+    img = None
+    if len(request.files) > 0:
+        picture: FileStorage = request.files.to_dict()['picture']
+        img_name = image_service.save(picture)
+        img = url_for('static', filename=f'images/{img_name}')
+    return render_template('meme/meme.html', img=img)
 
 
 
