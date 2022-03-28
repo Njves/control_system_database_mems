@@ -19,7 +19,7 @@ _mailinglist
 docs/_build/
 .vscode
 migrations/
-__pycache__
+__pycache__/
 
 # Coverage reports
 htmlcov/

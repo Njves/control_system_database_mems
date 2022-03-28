@@ -158,3 +158,16 @@ nav {
         margin-bottom: 15px;
     }
 }
+.mem_file {
+    display: block;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+.send_image {
+    display: block;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}

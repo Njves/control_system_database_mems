@@ -8,7 +8,7 @@ from werkzeug.utils import redirect
 import config
 from app import app, db
 from app.forms import LoginForm
-from app.models import Account
+from app.models import Account, Mem
 from app.service import ImageService
 
 
@@ -39,7 +39,9 @@ def register():
 
 @app.route('/account', methods=['POST', 'GET'])
 def account():
-    return render_template('account/account.html')
+    print(request.files)
+    mem_list = Mem.query.all()
+    return render_template('account/account.html', mem_list)
 
 
 @app.route('/login', methods=['POST', 'GET'])
