@@ -39,9 +39,9 @@ def register():
 
 @app.route('/account', methods=['POST', 'GET'])
 def account():
-    print(request.files)
-    mem_list = Mem.query.all()
-    return render_template('account/account.html', mem_list)
+    memes = Mem.query.all()
+    print(memes)
+    return render_template('account/account.html', mems=memes)
 
 
 @app.route('/login', methods=['POST', 'GET'])
