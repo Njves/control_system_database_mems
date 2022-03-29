@@ -2,7 +2,8 @@ import werkzeug
 from flask import jsonify
 from flask_restful import Resource, reqparse
 from random import randint
-from app import api_flask
+from app import api_flask, db
+from app.models import Mem
 from app.service import ImageService
 
 
@@ -15,9 +16,13 @@ class UploadImage(Resource):
         parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
         params = parser.parse_args()
         image_file = params['image']
-        service.save(image_file)
+        lnk = service.save(image_file)
+        lnk = "static/images/" + lnk
+        meme = Mem(name=params['name'], link=lnk, description="Описание", status=0)
         print(params)
-        return "{}:{}", 201
+        db.session.add(meme)
+        db.session.commit()
+        return "{\"ok\"}:{\"ok\"}", 201
 
 
 
