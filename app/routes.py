@@ -1,7 +1,7 @@
 import os
 
 from flask import render_template, request, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, login_required
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 

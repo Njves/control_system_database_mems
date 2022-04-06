@@ -19,8 +19,8 @@ My account
     <div class="profile">
         <img src="images/account.jpg" id="avatar" alt="">
         <div class="information">
-            <p class="name">Andrew Scot</p>
-            <p class="added">Pictures added 15k</p>
+            <p class="name">{{ current_user.username }}</p>
+            <p class="added">Pictures added {{ current_user.amount }}</p>
         </div>
     </div>
 

@@ -19,9 +19,13 @@ const handleImageUpload = event => {
     method: 'POST',
     body: formData
   })
-  .then(response => response.json())
+  .then(response => {
+    response.json()
+    location.reload()
+  })
   .then(data => {
     console.log(data.path)
+
   })
   .catch(error => {
     console.error(error)

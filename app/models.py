@@ -19,9 +19,9 @@ class Mem(db.Model):
     # Дата загрузки мема
     date = db.Column(db.DateTime, default=datetime.utcnow)
     # Описание мема
-    description = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.String(128))
     # Кол-во лайки
-    likes = db.Column(db.Integer)
+    likes = db.Column(db.Integer, default=0)
     # Видимость мема публичная/приватная
     status = db.Column(db.Integer, nullable=False, default=0)
     # уникальный id
