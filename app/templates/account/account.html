@@ -67,7 +67,7 @@ My account
         <!-- div одного элемента
         Типа так получается что есть контейнер "row" и сколько в нем "col" столько будет колонок -->
 
-       {% for i in mems %}
+        {% for i in mems %}
         <div class="col">
             <!-- Это карточка -->
             <div class="card" style="width: 18rem;">
@@ -75,11 +75,18 @@ My account
                      src="{{ i.link }}"
                      alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{ i.name }}</h5>
+                    <h5 class="card-title">{{ i.name }} {{ i.id }}</h5>
+
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
                         content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
+                    <form method="POST" action="meme/delete" id="delete_form">
+                         <input type="hidden" name="_method" value="DELETE" />
+                         <input type="hidden" name="id" value="{{ i.id }}" />
+                        <button class="btn btn-danger" id="btn_delete" type="submit">Delete</button>
+                    </form>
                 </div>
+
                 <!-- Это конец карточки -->
             </div>
         </div>
@@ -91,7 +98,7 @@ My account
 
 <script type="text/javascript">
 		let buttonStatys = false;
-		const passElem = document.querySelector(".addMem");
+		const passElem = document.querySelector(".addMem")
         const memFile = document.querySelector(".mem_file")
 		passElem.onanimationend = function () {
 			this.classList.remove("button-animation");
@@ -103,7 +110,6 @@ My account
 			}
             memFile.click();
 		}
-
 
 	</script>
 <script src="{{ url_for('static', filename='script/account.js') }}"></script>

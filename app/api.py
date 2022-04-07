@@ -31,21 +31,36 @@ class MemeApi(Resource):
         return Mem.query.filter_by(id=id)
 
     def post(self):
+        method = self.get_method()
+        if method == 'DELETE':
+            self.delete()
+            return
         parser = reqparse.RequestParser()
+
         parser.add_argument('name')
         parser.add_argument('link')
         parser.add_argument('description')
         parser.add_argument('status')
         parser.add_argument('owner_id')
         params = parser.parse_args()
+
         account = Account.query.filter_by(id=params['owner_id'])
         mem = Mem(name=params['name'], link=params['link'], description=params['description'], likes=0, status=params['likes'], owner_id=account)
         db.session.add(mem)
         db.session.commit()
 
     def delete(self):
-        parser = reqparse.RequestParser
+        parser = reqparse.RequestParser()
         parser.add_argument('id')
+        params = parser.parse_args()
+        id = params['id']
+        Mem.query.filter_by(id=id).delete()
+        db.session.commit()
 
-api_flask.add_resource(UploadImage, "/upload", "/upload/")
-api_flask.add_resource(MemeApi, "/meme/create")
+    def get_method(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('_method')
+        data = parser.parse_args()
+        return data['_method']
+api_flask.add_resource(UploadImage, '/upload', '/upload/')
+api_flask.add_resource(MemeApi, '/meme/create', '/meme/delete')

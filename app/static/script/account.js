@@ -34,6 +34,3 @@ const handleImageUpload = event => {
 memFile.onchange = function(event){
     handleImageUpload(event)
 }
-
-
-
