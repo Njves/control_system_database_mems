@@ -63,14 +63,17 @@ def login():
 @app.route('/meme/<meme_id>', methods=['GET', 'POST'])
 def mem(meme_id):
     image_service = ImageService()
-    print(request.form.to_dict())
-    print(request.files.to_dict())
     img = None
+    mem = Mem.query.filter_by(id=meme_id).one()
+    if mem is not None:
+        img = url_for(endpoint='static', filename='/'.join(mem.link.split('/')[1::]))
+        print(img)
     if len(request.files) > 0:
         picture: FileStorage = request.files.to_dict()['picture']
         img_name = image_service.save(picture)
         img = url_for('static', filename=f'images/{img_name}')
-    return render_template('meme/meme.html', img=img)
+    print(img)
+    return render_template('meme/meme.html', img=img, mem=mem)
 
 
 

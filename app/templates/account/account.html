@@ -17,7 +17,7 @@ My account
 </form>
 <div class="contain">
     <div class="profile">
-        <img src="images/account.jpg" id="avatar" alt="">
+        <img src="#" id="avatar" alt="">
         <div class="information">
             <p class="name">{{ current_user.username }}</p>
             <p class="added">Pictures added {{ current_user.amount }}</p>
@@ -80,11 +80,35 @@ My account
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
                         content.</p>
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
-                    <form method="POST" action="meme/delete" id="delete_form">
+                    <button class="btn btn-danger" id="btn_delete_{{ i.id }}" type="submit">Delete</button>
+                    <script>
+                    btnDelete = document.getElementById('btn_delete_{{ i.id }}')
+                    function deleteEvent(event) {
+                    const formData = new FormData()
+                    formData.append('id', {{ i.id }})
+                    fetch('/meme/delete', {
+                        method: 'DELETE',
+                        body: formData
+                      })
+                       .then(response => {
+                          response.json()
+                          location.reload()
+                        })
+                      .then(data => {
+                        console.log(data.path)
+
+                      })
+                      .catch(error => {
+                        console.error(error)
+                      })
+                    }
+                    btnDelete.addEventListener('click', deleteEvent)
+                    </script>
+                    <!-- <form method="POST" action="meme/delete" id="delete_form">
                          <input type="hidden" name="_method" value="DELETE" />
                          <input type="hidden" name="id" value="{{ i.id }}" />
-                        <button class="btn btn-danger" id="btn_delete" type="submit">Delete</button>
-                    </form>
+                         <button class="btn btn-danger" id="btn_delete" type="submit">Delete</button>
+                    </form> -->
                 </div>
 
                 <!-- Это конец карточки -->

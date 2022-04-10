@@ -1,13 +1,13 @@
 const avatar = document.getElementById('avatar')
 function fail() {
-    avatar.src = "http://127.0.0.1:5000/static/images/avatars/avatar_placeholder.png"
+  avatar.src = "http://127.0.0.1:5000/static/images/avatars/avatar_placeholder.png"
 }
 avatar.addEventListener('error', fail);
 const containerTags = document.getElementById('containerTags');
 
 
 function allowDrop(event) {
-    event.preventDefault();
+  event.preventDefault();
 }
 const handleImageUpload = event => {
   const files = event.target.files
@@ -19,18 +19,19 @@ const handleImageUpload = event => {
     method: 'POST',
     body: formData
   })
-  .then(response => {
-    response.json()
-    location.reload()
-  })
-  .then(data => {
-    console.log(data.path)
+    .then(response => {
+      response.json()
+      location.reload()
+    })
+    .then(data => {
+      console.log(data.path)
 
-  })
-  .catch(error => {
-    console.error(error)
-  })
+    })
+    .catch(error => {
+      console.error(error)
+    })
 }
-memFile.onchange = function(event){
-    handleImageUpload(event)
+memFile.onchange = function (event) {
+  handleImageUpload(event)
 }
+
