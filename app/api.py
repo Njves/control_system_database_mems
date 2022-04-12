@@ -44,12 +44,12 @@ class MemeApi(Resource):
 
     def put(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('name')
-        parser.add_argument('link')
-        parser.add_argument('description')
+        parser.add_argument('id')
         parser.add_argument('status')
-        parser.add_argument('owner_id')
         params = parser.parse_args()
+        mem = Mem.query.filter(id=params['id'])
+        mem.status = params['status']
+        db.session.commit()
 
     def delete(self):
         parser = reqparse.RequestParser()
