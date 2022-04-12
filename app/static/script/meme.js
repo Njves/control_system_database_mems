@@ -4,4 +4,3 @@ function fail() {
 }
 image.addEventListener('error', fail);
 
-
