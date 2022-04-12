@@ -14,7 +14,8 @@ from app.service import ImageService
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template('public/public.html')
+    memes = Mem.query.filter_by(status=1)
+    return render_template('public/public.html', mems=memes)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -39,7 +40,7 @@ def register():
 
 @app.route('/account', methods=['POST', 'GET'])
 def account():
-    memes = Mem.query.all()
+    memes = Mem.query.filter_by(status=0)
     print(memes)
     return render_template('account/account.html', mems=memes)
 
