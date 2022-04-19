@@ -74,7 +74,6 @@ class Account(UserMixin, db.Model):
 
     def __repr__(self):
         return f"Account: ('username': {self.username})," \
-               f" ('password': {self.password})," \
                f" ('date': {self.date})," \
                f" ('picture': {self.picture})," \
                f" ('amount': {self.amount}),"

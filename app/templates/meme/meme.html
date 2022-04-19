@@ -24,7 +24,7 @@ Meme
             <input type="text" class="form-control" placeholder="Тэги" name="tags" value="">
         </div>
         <div class="toggleBox">
-            Private
+            Public
             <div  class="toggle">
                 <input id="checkbox" type="checkbox">
                 <label for="" class="onbtn"></label>
@@ -32,25 +32,26 @@ Meme
             </div>
         </div>
         <div class="button-wrapper">
-            <button type="button" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-success" id="send">Save</button>
         </div>
     </form>
     <script>
-                    const checkbox = document.getElementById('checkbox')
+                const checkbox = document.getElementById('checkbox')
                 checkbox.addEventListener('click', function(event) {
 
-                    })
-
+                })
+                checkbox.checked = {{ mem.status }}
+                const button = document.getElementById('send');
+                send.addEventListener('click', function(event) {
                     const formData = new FormData()
                     formData.append('id', {{ mem.id }})
                     formData.append('status', checkbox.checked)
-                    fetch('/meme/delete', {
-                        method: 'DELETE',
+                    fetch('/meme/put', {
+                        method: 'put',
                         body: formData
                       })
                        .then(response => {
-                          response.json()
-                          location.reload()
+                          console.log(response.json())
                         })
                       .then(data => {
                         console.log(data.path)
@@ -59,7 +60,10 @@ Meme
                       .catch(error => {
                         console.error(error)
                       })
-                    }
+
+                })
+
+
     </script>
 </div>
 <script src="{{ url_for('static', filename='script/meme.js') }}"></script>
