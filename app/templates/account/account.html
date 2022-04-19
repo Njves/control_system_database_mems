@@ -133,7 +133,30 @@ My account
 			}
             memFile.click();
 		}
+        const handleImageUpload = event => {
+  const files = event.target.files
+  const formData = new FormData()
+  formData.append('image', files[0])
+  formData.append('owner_id', {{ current_user.id }})
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => {
+      console.log(response.json())
+      location.reload()
+    })
+    .then(data => {
+      console.log(data)
 
+    })
+    .catch(error => {
+      console.error(error)
+    })
+}
+memFile.onchange = function (event) {
+  handleImageUpload(event)
+}
 	</script>
 <script src="{{ url_for('static', filename='script/account.js') }}"></script>
 </body>

@@ -1,7 +1,7 @@
 import os
 
 from flask import render_template, request, url_for, flash
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, current_user, logout_user
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
@@ -38,13 +38,6 @@ def register():
     return render_template('register/register.html')
 
 
-@app.route('/account', methods=['POST', 'GET'])
-def account():
-    memes = Mem.query.filter_by(status=0)
-    print(memes)
-    return render_template('account/account.html', mems=memes)
-
-
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     form = request.form
@@ -61,6 +54,14 @@ def login():
     return render_template('signIn/signIn.html')
 
 
+@login_required
+@app.route('/account', methods=['POST', 'GET'])
+def account():
+    memes = Mem.query.filter_by(owner_id=current_user.id)
+    print(memes)
+    return render_template('account/account.html', mems=memes)
+
+
 @app.route('/meme/<meme_id>', methods=['GET', 'POST'])
 def mem(meme_id):
     image_service = ImageService()
@@ -75,6 +76,12 @@ def mem(meme_id):
         img = url_for('static', filename=f'images/{img_name}')
     print(img)
     return render_template('meme/meme.html', img=img, mem=mem)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 
