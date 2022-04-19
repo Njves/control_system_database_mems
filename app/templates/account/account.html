@@ -9,15 +9,15 @@ My account
 <link href="{{ url_for('static', filename='style/account.css', v=1) }}" rel="stylesheet">
 <body>
 <form action="" method="post">
-    <button id="addMem" class="addMem" type="button" onclick="clickMe()">
-        Добавить мем
-    </button>
+    <div id="addMem" class="addMem" type="button" onclick="clickMe()">
+        <img src="{{url_for('static', filename='icon/plus.jpg')}}"/>
+    </div>
     <input class="mem_file" type="file" accept=".jpg, .jpeg, .png"/>
 
 </form>
 <div class="contain">
     <div class="profile">
-        <img src="#" id="avatar" alt="">
+        <img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar'/>
         <div class="information">
             <p class="name">{{ current_user.username }}</p>
             <p class="added">Pictures added {{ current_user.amount }}</p>
