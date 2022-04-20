@@ -45,17 +45,27 @@ class MemeApi(Resource):
         parser.add_argument('owner_id')
         params = parser.parse_args()
 
-        account = Account.query.filter_by(id=params['owner_id'])
-        mem = Mem(name=params['name'], link=params['link'], description=params['description'], likes=0, status=params['likes'], owner=account)
+        account = Account.query.filter_by(id=params['owner_id']).first()
+        mem = Mem(name=params['name'], link=params['link'], description=params['description'], likes=0, status=params['status'], owner=account)
         db.session.add(mem)
         db.session.commit()
 
     def delete(self):
+        service = ImageService()
         parser = reqparse.RequestParser()
         parser.add_argument('id')
+        parser.add_argument('owner_id')
         params = parser.parse_args()
         id = params['id']
-        Mem.query.filter_by(id=id).delete()
+        account = Account.query.filter_by(id=params['owner_id']).first()
+        account.amount -= 1
+        mem_query = Mem.query.filter_by(id=id)
+        mem = mem_query.first()
+        filename = mem.link.split('/')[-1]
+        print(filename)
+        service.delete(filename)
+        mem_query.delete()
+        db.session.add(account)
         db.session.commit()
 
     def get_method(self):
@@ -68,10 +78,14 @@ class MemeApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('id')
         parser.add_argument('status')
+        parser.add_argument('name')
+        parser.add_argument('description')
         params = parser.parse_args()
         print(params)
         mem = Mem.query.filter_by(id=params['id']).first()
         mem.status = int(params['status'] == 'true')
+        mem.name = params['name']
+        mem.description = params['description']
         db.session.add(mem)
         db.session.commit()
 

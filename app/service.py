@@ -1,6 +1,7 @@
 import uuid
-
+import os
 from werkzeug.datastructures import FileStorage
+
 
 
 class Service:
@@ -19,3 +20,8 @@ class ImageService(Service):
             file.save(dst=self.IMG_PATH_DIR + filename)
             return filename
         return ''
+
+    def delete(self, filename: str) -> bool:
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        os.remove(os.path.join(basedir, ImageService.IMG_PATH + filename))
+        return True
