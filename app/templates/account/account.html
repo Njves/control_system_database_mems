@@ -88,6 +88,7 @@ My account
                     function deleteEvent(event) {
                     const formData = new FormData()
                     formData.append('id', {{ i.id }})
+                    formData.append('owner_id', {{ current_user.id }})
                     fetch('/meme/delete', {
                         method: 'DELETE',
                         body: formData
@@ -137,10 +138,10 @@ My account
             memFile.click();
 		}
         const handleImageUpload = event => {
-  const files = event.target.files
-  const formData = new FormData()
-  formData.append('image', files[0])
-  formData.append('owner_id', {{ current_user.id }})
+      const files = event.target.files
+      const formData = new FormData()
+      formData.append('image', files[0])
+      formData.append('owner_id', {{ current_user.id }})
   fetch('/upload', {
     method: 'POST',
     body: formData
@@ -162,5 +163,45 @@ memFile.onchange = function (event) {
 }
 	</script>
 <script src="{{ url_for('static', filename='script/account.js') }}"></script>
+<script>
+    //Здесь происходит загрузка картинок (событие выполняется один раз если за облостью квадратика розового,
+// Если внутри розового квадратика, то событие выполняется два раза
+// Поэтому если будут какие-то проблемы с загрузкой картинки, пиши мне, я уберу это
+placeDragAndDrop.addEventListener('drop', event => {
+  event.preventDefault()
+  let file = event.dataTransfer.files
+  const files = event.target.files
+      const formData = new FormData()
+      formData.append('image', file[0])
+      formData.append('owner_id', {{ current_user.id }})
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => {
+      console.log(response.json())
+      location.reload()
+    })
+    .then(data => {
+      console.log(data)
+
+    })
+    .catch(error => {
+      console.error(error)
+    })
+
+
+  if(!((file.length == 1) && types.includes(file[0].type))) {
+    console.log("Error file")
+    // Делаю файл пустым, если скинули больше одного файла или не тот тип
+    // Дизайн и анимации потом сделаю
+    file = null
+  }
+
+
+})
+
+
+</script>
 </body>
 {% endblock %}

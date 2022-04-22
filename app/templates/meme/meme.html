@@ -24,7 +24,7 @@ Meme
             <input type="text" class="form-control" id="input_description" placeholder="Описание" name="description" value="{{ mem.description }}">
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Тэги" name="tags" value="">
+            <input type="text" class="form-control" placeholder="Тэги" id="input_tags" name="tags" value="">
         </div>
         <div class="toggleBox">
             Public
@@ -42,6 +42,7 @@ Meme
                 const checkbox = document.getElementById('checkbox')
                 const input_name = document.getElementById('input_name')
                 const input_description = document.getElementById('input_description')
+                const input_tags = document.getElementById('input_tags')
                 checkbox.addEventListener('click', function(event) {
 
                 })
@@ -53,6 +54,7 @@ Meme
                     formData.append('status', checkbox.checked)
                     formData.append('name', input_name.value)
                     formData.append('description', input_description.value)
+                    formData.append('tags', input_tags.value);
                     fetch('/meme/put', {
                         method: 'put',
                         body: formData

@@ -80,6 +80,7 @@ class MemeApi(Resource):
         parser.add_argument('status')
         parser.add_argument('name')
         parser.add_argument('description')
+        parser.add_argument('tags')
         params = parser.parse_args()
         print(params)
         mem = Mem.query.filter_by(id=params['id']).first()

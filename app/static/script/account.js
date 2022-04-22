@@ -58,21 +58,6 @@ placeDragAndDrop.addEventListener('dragover', event => {
 })
 
 
-//Здесь происходит загрузка картинок (событие выполняется один раз если за облостью квадратика розового,
-// Если внутри розового квадратика, то событие выполняется два раза
-// Поэтому если будут какие-то проблемы с загрузкой картинки, пиши мне, я уберу это
-placeDragAndDrop.addEventListener('drop', event => {
-  event.preventDefault()
-  let file = event.dataTransfer.files
-  if(!((file.length == 1) && types.includes(file[0].type))) {
-    console.log("Error file")
-    // Делаю файл пустым, если скинули больше одного файла или не тот тип
-    // Дизайн и анимации потом сделаю
-    file = null
-  }
-})
-
-
 
 dragAndDrop.addEventListener('dragenter', event => {
   event.preventDefault()
