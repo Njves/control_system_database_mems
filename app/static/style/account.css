@@ -96,31 +96,50 @@ nav {
     width: 70px;
     height: 70px;
     border: none;
-    color: #FFFFFF;
     text-decoration: none;
     z-index: 1;
     overflow: hidden;
-    background-color: #1C1B1B;
     border-radius: 50%;
 }
 
 @keyframes small-button {
     50% {
-        font-size: 60px;
-        line-height: 52px;
         width: 64px;
         height: 64px;
         right: 53px;
         top: calc(100% - 87px);
     }
     100%{
-        font-size: 80px;
-        line-height: 52px;
         width: 70px;
         height: 70px;
         right: 50px;
         top: calc(100% - 90px);
     }
+}
+
+.dragAndDrop {
+    position: fixed;
+    display: flex;
+    min-width: 500px;
+    min-height: 500px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(247, 235, 222);
+    left: calc(50% - 250px);
+    bottom: calc(50% - 250px);
+    font-size: 24px;
+    border-radius: 25px;
+    z-index: 1;
+}
+
+.placeDragAndDrop {
+    background-color: rgba(27, 28, 27, 0.6);
+    top: -56px;
+    height: calc(100vh + 56px);
+    width: 100vw;
+    z-index: 1;
+    position: fixed;
+    visibility: hidden;
 }
 
 .button-animation {
