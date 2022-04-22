@@ -1,5 +1,6 @@
 import os
 
+import werkzeug.exceptions
 from flask import render_template, request, url_for, flash
 from flask_login import login_user, login_required, current_user, logout_user
 from werkzeug.datastructures import FileStorage
@@ -54,11 +55,11 @@ def login():
     return render_template('signIn/signIn.html')
 
 
-@login_required
 @app.route('/account', methods=['POST', 'GET'])
+@login_required
 def account():
-    memes = Mem.query.filter_by(owner_id=current_user.id)
-    print(memes)
+    memes = Mem.query.filter_by(owner_id=current_user.id).all()
+    current_user.amount = len(memes)
     return render_template('account/account.html', mems=memes)
 
 
@@ -84,4 +85,14 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.errorhandler(werkzeug.exceptions.Unauthorized)
+def handle_unauthorized_error(e):
+    return ":))))", 401
 
+
+@app.route("/redirect")
+def add_new_mem(meme_id):
+    return redirect(url_for('mem', meme_id=meme_id), 301)
+
+
+app.register_error_handler(401, handle_unauthorized_error)
