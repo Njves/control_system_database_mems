@@ -27,3 +27,4 @@ htmlcov/
 .coverage.*
 *,cover
 images/
+app.db

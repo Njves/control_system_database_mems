@@ -1,5 +1,7 @@
+"""
+The module contains api layer methods
+"""
 import uuid
-
 import werkzeug
 from flask import jsonify
 from flask_restful import Resource, reqparse
@@ -10,11 +12,22 @@ from app.service import ImageService
 
 
 class UploadImage(Resource):
+    """
+    UploadImage designed to create a meme with empty fields,
+    but with a link to a picture, also adds a picture to the file system
+    Only post
+    Request data:
+        image: File - mem image,
+        owner_id: int - user id
+    Response data:
+        mem_id: int
+    """
     def post(self):
         service = ImageService()
         parser = reqparse.RequestParser()
         parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
         parser.add_argument('owner_id')
+
         params = parser.parse_args()
         image_file = params['image']
         filename = service.save(image_file)
@@ -33,10 +46,30 @@ class UploadImage(Resource):
 
 
 class MemeApi(Resource):
+    """
+    Api for interacting with meme models
+    GET, POST, PUT, DELETE methods
+    """
     def get(self, id):
+        """
+        Request data:
+            id: int - mem id
+        Response data:
+            mem: str - mem json
+        """
         return Mem.query.filter_by(id=id)
 
     def post(self):
+        """
+        Request data:
+            name: str - mem name,
+            link: str - link to mem image,
+            description: str - mem description,
+            status: int, status visibility mem 0 - private, 1 - public
+            owner_id: int - user id
+        Response data:
+            mem: str - mem json
+        """
         parser = reqparse.RequestParser()
         parser.add_argument('name')
         parser.add_argument('link')
@@ -51,6 +84,13 @@ class MemeApi(Resource):
         db.session.commit()
 
     def delete(self):
+        """
+        Request data:
+            id: int - id mem,
+            owner_id: int, id user
+        Response data:
+            code: int, 1 - success, 0 - failure
+        """
         service = ImageService()
         parser = reqparse.RequestParser()
         parser.add_argument('id')
@@ -68,13 +108,17 @@ class MemeApi(Resource):
         db.session.add(account)
         db.session.commit()
 
-    def get_method(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('_method')
-        data = parser.parse_args()
-        return data['_method']
-
     def put(self):
+        """
+        Request data:
+            name: str - mem name,
+            description: str - mem description,
+            status: int, status visibility mem 0 - private, 1 - public
+            owner_id: int - user id,
+            tags: str, raw string contain tags
+        Response data:
+            mem: str - mem json
+        """
         parser = reqparse.RequestParser()
         parser.add_argument('id')
         parser.add_argument('status')

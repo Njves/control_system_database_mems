@@ -1,27 +1,32 @@
-import os
-
+"""
+Module contain http routes application
+"""
 import werkzeug.exceptions
 from flask import render_template, request, url_for, flash
 from flask_login import login_user, login_required, current_user, logout_user
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
-import config
 from app import app, db
-from app.forms import LoginForm
 from app.models import Account, Mem
 from app.service import ImageService
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    """
+    Main page
+    """
+    # get only public memes
     memes = Mem.query.filter_by(status=1)
     return render_template('public/public.html', mems=memes)
 
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+
     form = request.form
+    # if client send something - checks data
     if len(form) > 0:
         username = form['username']
         email = form['email']
@@ -42,6 +47,7 @@ def register():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     form = request.form
+    # if client send something - checks data
     if len(form) > 0:
         username_or_email = form['username_email']
         password = form['password']
@@ -58,6 +64,7 @@ def login():
 @app.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
+
     memes = Mem.query.filter_by(owner_id=current_user.id).all()
     current_user.amount = len(memes)
     return render_template('account/account.html', mems=memes)
