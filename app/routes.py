@@ -64,7 +64,6 @@ def login():
 @app.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
-
     memes = Mem.query.filter_by(owner_id=current_user.id).all()
     current_user.amount = len(memes)
     return render_template('account/account.html', mems=memes)
@@ -74,7 +73,7 @@ def account():
 def mem(meme_id):
     image_service = ImageService()
     img = None
-    mem = Mem.query.filter_by(id=meme_id).one()
+    mem = Mem.query.filter_by(id=meme_id).first()
     if mem is not None:
         img = url_for(endpoint='static', filename='/'.join(mem.link.split('/')[1::]))
         print(img)
@@ -83,7 +82,14 @@ def mem(meme_id):
         img_name = image_service.save(picture)
         img = url_for('static', filename=f'images/{img_name}')
     print(img)
-    return render_template('meme/meme.html', img=img, mem=mem)
+
+    mem_tags = ''
+    for index, tag in enumerate(mem.tags):
+        if index != len(mem.tags) - 1:
+            mem_tags += tag.name + ', '
+        else:
+            mem_tags += tag.name
+    return render_template('meme/meme.html', img=img, mem=mem, mem_tags=mem_tags)
 
 
 @app.route('/logout')

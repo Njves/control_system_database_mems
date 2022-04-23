@@ -8,7 +8,7 @@ from flask_restful import Resource, reqparse
 from random import randint
 from app import api_flask, db
 from app.models import Mem, Account
-from app.service import ImageService
+from app.service import ImageService, TagService
 
 
 class UploadImage(Resource):
@@ -119,6 +119,7 @@ class MemeApi(Resource):
         Response data:
             mem: str - mem json
         """
+        tag_service = TagService()
         parser = reqparse.RequestParser()
         parser.add_argument('id')
         parser.add_argument('status')
@@ -131,6 +132,7 @@ class MemeApi(Resource):
         mem.status = int(params['status'] == 'true')
         mem.name = params['name']
         mem.description = params['description']
+        mem.tags = tag_service.parse_tag(params['tags'])
         db.session.add(mem)
         db.session.commit()
 
