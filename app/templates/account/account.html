@@ -33,11 +33,11 @@ My account
             <!-- Кнопка с выпадающим меню-->
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-filter"
-                         viewBox="0 0 16 16">
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                        class="bi bi-filter" viewBox="0 0 16 16">
                         <path
-                                d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                            d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
                     </svg>
                     По дате добавления
                 </button>
@@ -79,8 +79,7 @@ My account
                      alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">{{ i.name }} {{ i.id }}</h5>
-
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <p class="card-text">{{ i.description }}</p>
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
                     <button class="btn btn-danger" id="btn_delete_{{ i.id }}" type="submit">Delete</button>
                     <script>

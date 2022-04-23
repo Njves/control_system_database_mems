@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
@@ -45,6 +46,13 @@ class Tag(db.Model):
     date = db.Column(db.DateTime, default=datetime.utcnow)
     uid = db.Column(db.String(128), comment='unique id')
 
+    def __repr__(self):
+        return f"Tag: ('id': {self.id})," \
+               f" ('name': {self.name})," \
+               f" ('date': {self.date})," \
+               f" ('uid': {self.uid})," \
+
+
 
 class Account(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +63,7 @@ class Account(UserMixin, db.Model):
     picture = db.Column(db.String(128), comment='link to avatar')
     amount = db.Column(db.Integer, default=0, comment='amount loaded mems')
     mems = db.relationship('Mem', backref='owner', lazy='dynamic')
+    uid = db.Column(db.String(128), default=uuid.uuid4(), comment="unique user id")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
