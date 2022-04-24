@@ -5,7 +5,7 @@ import uuid
 from copy import deepcopy, copy
 
 import werkzeug
-from flask import jsonify
+from flask import jsonify, Response
 from flask_restful import Resource, reqparse
 from random import randint
 from app import api_flask, db
@@ -100,7 +100,14 @@ class MemeApi(Resource):
         parser.add_argument('owner_id')
         params = parser.parse_args()
         id = params['id']
+
         account = Account.query.filter_by(uid=params['owner_id']).first()
+        if account is None:
+            return Response("{}", status=403)
+        else:
+            if account.uid != params['owner_id']:
+                return Response("{}", status=403)
+
         account.amount -= 1
         mem_query = Mem.query.filter_by(id=id)
         mem = mem_query.first()
