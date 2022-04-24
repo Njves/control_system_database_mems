@@ -13,7 +13,7 @@ My account
     </div>
 <form action="" method="post">
     <div id="addMem" class="addMem" type="button" onclick="clickMe()">
-        <img src="{{url_for('static', filename='icon/plus.jpg')}}"/>
+        <img src="{{url_for('static', filename='icon/plus1.png')}}"/>
     </div>
     <input class="mem_file" type="file" accept=".jpg, .jpeg, .png"/>
 
@@ -87,7 +87,7 @@ My account
                     function deleteEvent(event) {
                     const formData = new FormData()
                     formData.append('id', {{ i.id }})
-                    formData.append('owner_id', {{ current_user.id }})
+                    formData.append('owner_id', "{{ current_user.uid }}")
                     fetch('/meme/delete', {
                         method: 'DELETE',
                         body: formData
@@ -140,7 +140,7 @@ My account
       const files = event.target.files
       const formData = new FormData()
       formData.append('image', files[0])
-      formData.append('owner_id', {{ current_user.id }})
+      formData.append('owner_id', "{{ current_user.uid }}")
   fetch('/upload', {
     method: 'POST',
     body: formData
@@ -170,9 +170,17 @@ placeDragAndDrop.addEventListener('drop', event => {
   event.preventDefault()
   let file = event.dataTransfer.files
   const files = event.target.files
+  if(!((file.length == 1) && types.includes(file[0].type))) {
+    console.log("Error file")
+    // Делаю файл пустым, если скинули больше одного файла или не тот тип
+    // Дизайн и анимации потом сделаю
+    file = null
+    alert('Неверный тип файла')
+    return
+  }
       const formData = new FormData()
       formData.append('image', file[0])
-      formData.append('owner_id', {{ current_user.id }})
+      formData.append('owner_id', "{{ current_user.uid }}")
   fetch('/upload', {
     method: 'POST',
     body: formData
@@ -190,12 +198,7 @@ placeDragAndDrop.addEventListener('drop', event => {
     })
 
 
-  if(!((file.length == 1) && types.includes(file[0].type))) {
-    console.log("Error file")
-    // Делаю файл пустым, если скинули больше одного файла или не тот тип
-    // Дизайн и анимации потом сделаю
-    file = null
-  }
+
 
 
 })

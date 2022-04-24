@@ -38,8 +38,10 @@ class ImageService(Service):
         The method delete image from file system
         """
         basedir = os.path.abspath(os.path.dirname(__file__))
-        os.remove(os.path.join(basedir, ImageService.IMG_PATH + filename))
-
+        try:
+            os.remove(os.path.join(basedir, ImageService.IMG_PATH + filename))
+        except FileNotFoundError:
+            print("Файла не существует")
 
 class TagService(Service):
     """
@@ -66,8 +68,9 @@ class TagService(Service):
                 tags.append(exist_tag)
         return tags
 
-    def add_tag(self, name):
+    def add_tag(self, name: str):
         tag = Tag(name=name)
         db.session.add(tag)
         db.session.commit()
         return tag
+

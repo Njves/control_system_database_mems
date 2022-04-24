@@ -28,6 +28,11 @@ class Mem(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('account.id'))
     tags = db.relationship('Tag', secondary=mem_tag, backref=db.backref('mems'))
 
+    def __eq__(self, other):
+        return self.id == other.id and self.name == other.name and self.link == other.link and self.date == other.date and\
+                self.description == other.description and self.likes == other.likes and self.status == other.status and self.uid == other.uid and\
+                self.owner_id == other.owner_id and self.tags == other.tags
+
     def __repr__(self):
         return f"Mem: ('id': {self.id})," \
                f" ('name': {self.name})," \
@@ -50,8 +55,7 @@ class Tag(db.Model):
         return f"Tag: ('id': {self.id})," \
                f" ('name': {self.name})," \
                f" ('date': {self.date})," \
-               f" ('uid': {self.uid})," \
-
+               f" ('uid': {self.uid}),"
 
 
 class Account(UserMixin, db.Model):
@@ -63,7 +67,12 @@ class Account(UserMixin, db.Model):
     picture = db.Column(db.String(128), comment='link to avatar')
     amount = db.Column(db.Integer, default=0, comment='amount loaded mems')
     mems = db.relationship('Mem', backref='owner', lazy='dynamic')
-    uid = db.Column(db.String(128), default=uuid.uuid4(), comment="unique user id")
+    uid = db.Column(db.String(128), default=str(uuid.uuid4()), comment="unique user id")
+
+    def __eq__(self, other):
+        return self.id == other.id and self.username == other.username and self.email == other.email and \
+               self.date == other.date and self.picture == other.picture and self.amount == other.amount and \
+               self.uid == other.uid
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

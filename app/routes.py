@@ -82,7 +82,6 @@ def mem(meme_id):
         img_name = image_service.save(picture)
         img = url_for('static', filename=f'images/{img_name}')
     print(img)
-
     mem_tags = ''
     for index, tag in enumerate(mem.tags):
         if index != len(mem.tags) - 1:

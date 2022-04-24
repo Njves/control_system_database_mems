@@ -2,6 +2,8 @@
 The module contains api layer methods
 """
 import uuid
+from copy import deepcopy, copy
+
 import werkzeug
 from flask import jsonify
 from flask_restful import Resource, reqparse
@@ -27,13 +29,13 @@ class UploadImage(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
         parser.add_argument('owner_id')
-
         params = parser.parse_args()
+
         image_file = params['image']
         filename = service.save(image_file)
         lnk = ImageService.IMG_PATH + filename
         print(params)
-        account = Account.query.filter_by(id=params['owner_id']).first()
+        account = Account.query.filter_by(uid=params['owner_id']).first()
         print(account)
         account.amount += 1
         meme = Mem(name="", link=lnk, description="", status=0, uid=str(uuid.uuid4()), owner=account)
@@ -50,6 +52,8 @@ class MemeApi(Resource):
     Api for interacting with meme models
     GET, POST, PUT, DELETE methods
     """
+    tag_service = TagService()
+    image_service = ImageService()
     def get(self, id):
         """
         Request data:
@@ -78,7 +82,7 @@ class MemeApi(Resource):
         parser.add_argument('owner_id')
         params = parser.parse_args()
 
-        account = Account.query.filter_by(id=params['owner_id']).first()
+        account = Account.query.filter_by(uid=params['owner_id']).first()
         mem = Mem(name=params['name'], link=params['link'], description=params['description'], likes=0, status=params['status'], owner=account)
         db.session.add(mem)
         db.session.commit()
@@ -91,19 +95,25 @@ class MemeApi(Resource):
         Response data:
             code: int, 1 - success, 0 - failure
         """
-        service = ImageService()
         parser = reqparse.RequestParser()
         parser.add_argument('id')
         parser.add_argument('owner_id')
         params = parser.parse_args()
         id = params['id']
-        account = Account.query.filter_by(id=params['owner_id']).first()
+        account = Account.query.filter_by(uid=params['owner_id']).first()
         account.amount -= 1
         mem_query = Mem.query.filter_by(id=id)
         mem = mem_query.first()
+        tags = copy(mem.tags)
+        print(tags)
+        for tag in tags:
+            print(tag)
+            mem.tags.remove(tag)
+            db.session.commit()
+
         filename = mem.link.split('/')[-1]
         print(filename)
-        service.delete(filename)
+        self.image_service.delete(filename)
         mem_query.delete()
         db.session.add(account)
         db.session.commit()
@@ -119,20 +129,25 @@ class MemeApi(Resource):
         Response data:
             mem: str - mem json
         """
-        tag_service = TagService()
+
         parser = reqparse.RequestParser()
         parser.add_argument('id')
         parser.add_argument('status')
         parser.add_argument('name')
         parser.add_argument('description')
         parser.add_argument('tags')
+        parser.add_argument('owner_id')
         params = parser.parse_args()
         print(params)
+        requester = Account.query.filter_by(uid=params['owner_id']).first()
         mem = Mem.query.filter_by(id=params['id']).first()
+        owner = Account.query.filter_by(id=mem.owner_id).first()
+        if requester.uid != owner.uid:
+            return 403
         mem.status = int(params['status'] == 'true')
         mem.name = params['name']
         mem.description = params['description']
-        mem.tags = tag_service.parse_tag(params['tags'])
+        mem.tags = self.tag_service.parse_tag(params['tags'])
         db.session.add(mem)
         db.session.commit()
 
