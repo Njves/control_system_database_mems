@@ -8,6 +8,7 @@ from werkzeug.datastructures import FileStorage
 
 from app.models import Tag
 from app import db
+import itertools
 
 class Service:
     def __init__(self):
@@ -54,7 +55,8 @@ class TagService(Service):
         result: [cats, woman, anime]
         """
         # разделяет тэги по запятым,потом очищает пробелы, потом приводит к нижнему регистру
-        raw_tag = list(set(list(map(str.lower, list(map(str.strip, raw_str.split(',')))))))
+        raw_tag = (list(map(str.lower, list(map(str.strip, raw_str.split(','))))))
+        raw_tag = [i for i, _ in itertools.groupby(raw_tag)]
         for index, value in enumerate(raw_tag):
             raw_tag[index] = value.replace(' ', '')
         print(raw_tag)
