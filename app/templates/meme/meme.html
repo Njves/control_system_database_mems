@@ -29,12 +29,18 @@ Meme
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Тэги" id="input_tags" name="tags" value="{{ mem_tags }}">
         </div>
-        <div class="toggleBox">
-            Public
-            <div  class="toggle">
-                <input id="checkbox" type="checkbox">
-                <label for="" class="onbtn"></label>
-                <label for="" class="offbtn"></label>
+        <div>
+            <div class="toggleBox">
+                Public
+                <div  class="toggle">
+                    <input id="checkbox" type="checkbox">
+                    <label class="togglebtn" for="" class="onbtn"></label>
+                    <label class="togglebtn" for="" class="offbtn"></label>
+                </div>
+            </div>
+            <div>
+                <input class="toggle-heart" id="toggle-heart" type="checkbox"/>
+                <label class="toggle-heart" for="toggle-heart" aria-label="like">❤</label>
             </div>
         </div>
         <div class="button-wrapper">
