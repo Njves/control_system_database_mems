@@ -65,7 +65,8 @@ Community
                     <h5 class="card-title">{{ i.name }} {{ i.id }}</h5>
                     <p class="card-text">{{ i.description }}</p>
                     <img src="{{ url_for('static', filename='images/avatars/avatar_placeholder.png') }}" height="30"
-                        width="30" /> <span>Author: {{ current_user.username }}</span>
+                        width="30" /> <span>Author: {{ i.owner.username }}</span><br/>
+                    <span>&#10084;10</span>
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
                     <button class="btn btn-danger" id="btn_delete_{{ i.id }}" type="submit">Delete</button>
                     <script>

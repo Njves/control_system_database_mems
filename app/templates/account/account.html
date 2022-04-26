@@ -79,7 +79,8 @@ My account
                      alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">{{ i.name }} {{ i.id }}</h5>
-                    <p class="card-text">{{ i.description }}</p>
+                    <p class="card-text">{{ i.description }}</p><br/>
+                    <span>&#10084;10</span>
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
                     <button class="btn btn-danger" id="btn_delete_{{ i.id }}" type="submit">Delete</button>
                     <script>
