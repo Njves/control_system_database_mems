@@ -4,6 +4,7 @@ Module contain http routes application
 import werkzeug.exceptions
 from flask import render_template, request, url_for, flash
 from flask_login import login_user, login_required, current_user, logout_user
+from sqlalchemy import func
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
@@ -18,8 +19,13 @@ def index():
     Main page
     """
     # get only public memes
+    query = request.args.get('query')
     memes = Mem.query.filter_by(status=1)
-    return render_template('public/public.html', mems=memes)
+    if query:
+        memes = Mem.query.filter(Mem.name.contains(query) & Mem.status == 1).all()
+    else:
+        query = ''
+    return render_template('public/public.html', mems=memes, query=query)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -64,9 +70,14 @@ def login():
 @app.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
+    query = request.args.get('query')
     memes = Mem.query.filter_by(owner_id=current_user.id).all()
     current_user.amount = len(memes)
-    return render_template('account/account.html', mems=memes)
+    if query:
+        memes = Mem.query.filter(Mem.name.contains(query) & Mem.owner_id == current_user.id).all()
+    else:
+        query = ''
+    return render_template('account/account.html', mems=memes, query=query)
 
 
 @app.route('/meme/<meme_id>', methods=['GET', 'POST'])

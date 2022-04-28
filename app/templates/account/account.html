@@ -8,15 +8,15 @@ My account
 {% block content %}
 <link href="{{ url_for('static', filename='style/account.css', v=1) }}" rel="stylesheet">
 <body>
-    <div class="placeDragAndDrop">
-        <div class="dragAndDrop">Перетащите сюда мем</div>
-    </div>
+<div class="placeDragAndDrop">
+    <div class="dragAndDrop">Перетащите сюда мем</div>
+</div>
+
 <form action="" method="post">
     <div id="addMem" class="addMem" type="button" onclick="clickMe()">
         <img src="{{url_for('static', filename='icon/plus1.png')}}"/>
     </div>
     <input class="mem_file" type="file" accept=".jpg, .jpeg, .png"/>
-
 </form>
 <div class="contain">
     <div class="profile">
@@ -33,11 +33,11 @@ My account
             <!-- Кнопка с выпадающим меню-->
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
+                        data-bs-toggle="dropdown" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
-                        class="bi bi-filter" viewBox="0 0 16 16">
+                         class="bi bi-filter" viewBox="0 0 16 16">
                         <path
-                            d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                                d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
                     </svg>
                     По дате добавления
                 </button>
@@ -50,19 +50,24 @@ My account
         </div>
         <!-- Конец кнопки -->
         <!-- Строка поиска -->
-        <div class="search">
+
+        <form class="search" action="" method="GET" id="search_form">
             <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor" class="bi bi-search"
-                             viewBox="0 0 16 16">
-                            <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                        </svg>
-                        </span>
-                <input type="text" class="form-control" placeholder="Поиск  " aria-label="Username"
-                       aria-describedby="basic-addon1">
+
+                <input type="text" class="form-control" placeholder="Поиск" aria-label="Username"
+                       aria-describedby="basic-addon1" name="query" id="input_search" value="{{ query }}">
+                <button class="input-group-text" id="basic-addon1" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor" class="bi bi-search"
+                         viewBox="0 0 16 16">
+                        <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>
+                </button>
+
             </div>
-        </div>
+
+        </form>
+
         <!-- Конец строки поиска -->
     </div>
     <div class="containerTags">
@@ -78,11 +83,35 @@ My account
                      src="{{ i.link }}"
                      alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{ i.name }} {{ i.id }}</h5>
+                    <h5 class="card-title">{{ i.name }}</h5>
                     <p class="card-text">{{ i.description }}</p><br/>
-                    <span>&#10084;10</span>
+                    <span>&#10084;{{ i.likes }}</span>
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
                     <button class="btn btn-danger" id="btn_delete_{{ i.id }}" type="submit">Delete</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        Launch demo modal
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <script>
                     btnDelete = document.getElementById('btn_delete_{{ i.id }}')
                     function deleteEvent(event) {

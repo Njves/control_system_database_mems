@@ -54,14 +54,16 @@ class MemeApi(Resource):
     """
     tag_service = TagService()
     image_service = ImageService()
-    def get(self, id):
+
+    def get(self, id=0):
         """
         Request data:
             id: int - mem id
         Response data:
             mem: str - mem json
         """
-        return Mem.query.filter_by(id=id)
+
+        return Mem.query.filter_by(id=id).first_or_404()
 
     def post(self):
         """
@@ -144,6 +146,7 @@ class MemeApi(Resource):
         parser.add_argument('description')
         parser.add_argument('tags')
         parser.add_argument('owner_id')
+        parser.add_argument('like')
         params = parser.parse_args()
         print(params)
         requester = Account.query.filter_by(uid=params['owner_id']).first()
@@ -155,9 +158,10 @@ class MemeApi(Resource):
         mem.name = params['name']
         mem.description = params['description']
         mem.tags = self.tag_service.parse_tag(params['tags'])
+        mem.likes += int(params['like'] == 'true')
         db.session.add(mem)
         db.session.commit()
 
 
 api_flask.add_resource(UploadImage, '/upload', '/upload/')
-api_flask.add_resource(MemeApi, '/meme/create', '/meme/delete', '/meme/put')
+api_flask.add_resource(MemeApi, '/meme/create', '/meme/delete', '/meme/put', '/meme/get/<int:id>')
