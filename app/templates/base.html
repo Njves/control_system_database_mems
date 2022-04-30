@@ -31,13 +31,22 @@
                         <li class="nav-item">
                             <a class="nav-link" id="my_account_btn" href="{{ url_for('account') }}">My account</a>
                         </li>
+                        {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" id="logout_btn" href="{{ url_for('logout') }}">Logout</a>
+                            <div class="logout_block" align="right" id="left_logout">
+                                 <img class="logout_img" src="static/images/icons/logout_icon_2.png" width="32" height="32" align="left"/>
+                                 <a class="logout" href="{{ url_for('logout') }}" >Logout</a>
+                            </div>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
             {% if current_user.is_authenticated %}
+            <div class="logout_block" id="right_logout">
+               <img class="logout_img" src="static/images/icons/logout_icon_2.png" width="32" height="32" align="left"/>
+               <a class="logout" href="{{ url_for('logout') }}" >Logout</a>
+            </div>
             <a href="{{ url_for('account') }}"><img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar' class="child_profile_avatar" /> </a>
             {% else %}
             <a href="{{ url_for('login') }}"><button class="btn btn-outline-success my-2 my-sm-0" id="login">Войти</button></a>
