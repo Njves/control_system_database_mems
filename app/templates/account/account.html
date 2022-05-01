@@ -59,7 +59,7 @@ My account
 
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button class="dropdown-item"  type="submit" name="sort" value="">По дате добавления</button></li>
+                        <li><button class="dropdown-item"  >По дате добавления</button></li>
                         <li><button class="dropdown-item"  type="submit" name="sort" value="by_title">По названию</button></li>
                         <li><button class="dropdown-item"  type="submit" name="sort" value="by_likes">По количеству лайков</button></li>
                         <li><button class="dropdown-item"  type="submit" name="sort" value="by_view">По популярности</button></li>
@@ -108,31 +108,9 @@ My account
                     <p class="card-text">{{ i.description }}</p><br/>
                     <span>&#10084;{{ i.likes }}</span>
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
-                    <button class="btn btn-danger" id="btn_delete_{{ i.id }}" type="submit">Delete</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                        Launch demo modal
+                    <button type="button" id="btn_delete_{{ i.id }}" class="btn btn-danger">
+                        Remove
                     </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <script>
                     btnDelete = document.getElementById('btn_delete_{{ i.id }}')
                     function deleteEvent(event) {
@@ -277,14 +255,7 @@ placeDragAndDrop.addEventListener('drop', event => {
     .catch(error => {
       console.error(error)
     })
-
-
-
-
-
 })
-
-
 </script>
 </body>
 {% endblock %}

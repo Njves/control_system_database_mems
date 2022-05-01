@@ -73,7 +73,7 @@ def account():
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
     memes_query = Mem.query.filter_by(owner_id=current_user.id)
-   
+
     sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
                     'by_likes': memes_query.order_by(desc(Mem.likes)),
                     'by_views': 'views'}
