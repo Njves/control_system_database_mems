@@ -17,12 +17,61 @@ body, html, .main {
     margin-right: 8px;
     background-color: #ffffff;
 }
+
+a.logout:link{
+    color: #FFFFFF8C;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 16px;
+    text-decoration: none;
+}
+
+a.logout:visited{
+    color: #FFFFFF8C;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 16px;
+    text-decoration: none;
+}
+
+a.logout:hover{
+    color: #cccccc;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 16px;
+    text-decoration: none;
+}
+
+.logout_img{
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.logout_block{
+    display: flex;
+}
+
+
+
 @media (max-width: 992px) {
     #login  {
         display: none;
     }
 
     .child_profile_avatar {
+        display: none;
+    }
+
+    #right_logout{
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    #left_logout{
         display: none;
     }
 }
