@@ -1,4 +1,4 @@
-const avatar = document.getElementById('avatar')
+
 function fail() {
   avatar.src = "http://127.0.0.1:5000/static/images/avatars/avatar_placeholder.png"
 }
@@ -10,9 +10,6 @@ function allowDrop(event) {
 }
 
 
-memFile.onchange = function(event){
-    handleImageUpload(event)
-}
 
 // Реализация Drag&Drop
 

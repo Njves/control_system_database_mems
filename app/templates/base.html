@@ -44,7 +44,7 @@
             </div>
             {% if current_user.is_authenticated %}
             <div class="logout_block" id="right_logout">
-               <img class="logout_img" src="static/images/icons/logout_icon_2.png" width="32" height="32" align="left"/>
+               <img class="logout_img" src="{{ url_for('static', filename='icon/logout_icon_2.png') }}" width="32" height="32" align="left"/>
                <a class="logout" href="{{ url_for('logout') }}" >Logout</a>
             </div>
             <a href="{{ url_for('account') }}"><img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar' class="child_profile_avatar" /> </a>

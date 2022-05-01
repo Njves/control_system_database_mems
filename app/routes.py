@@ -4,7 +4,7 @@ Module contain http routes application
 import werkzeug.exceptions
 from flask import render_template, request, url_for, flash
 from flask_login import login_user, login_required, current_user, logout_user
-from sqlalchemy import func
+from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
@@ -22,7 +22,7 @@ def index():
     query = request.args.get('query')
     memes = Mem.query.filter_by(status=1)
     if query:
-        memes = Mem.query.filter(Mem.name.contains(query) & Mem.status == 1).all()
+        memes = Mem.query.filter(Mem.name.contains(query) and Mem.status == 1).all()
     else:
         query = ''
     return render_template('public/public.html', mems=memes, query=query)
@@ -70,14 +70,21 @@ def login():
 @app.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
-    query = request.args.get('query')
-    memes = Mem.query.filter_by(owner_id=current_user.id).all()
-    current_user.amount = len(memes)
+    query = request.args.get('query', default='')
+    sort_name = request.args.get('sort', default='')
+    memes_query = Mem.query.filter_by(owner_id=current_user.id)
+   
+    sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
+                    'by_likes': memes_query.order_by(desc(Mem.likes)),
+                    'by_views': 'views'}
     if query:
-        memes = Mem.query.filter(Mem.name.contains(query) & Mem.owner_id == current_user.id).all()
-    else:
-        query = ''
-    return render_template('account/account.html', mems=memes, query=query)
+        print("Effect")
+        memes_query = memes_query.filter(Mem.name.ilike("%" + query + "%"))
+    if sort_name:
+        memes_query = sort_various.get(sort_name, '')
+    memes = memes_query.all()
+
+    return render_template('account/account.html', mems=memes, query=query, sort_name=sort_name)
 
 
 @app.route('/meme/<meme_id>', methods=['GET', 'POST'])

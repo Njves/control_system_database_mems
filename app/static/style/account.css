@@ -206,4 +206,7 @@ nav {
     width: 0;
     height: 0;
 }
+.avatar_file {
+    display: none;
+}
 

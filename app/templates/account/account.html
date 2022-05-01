@@ -12,15 +12,18 @@ My account
     <div class="dragAndDrop">Перетащите сюда мем</div>
 </div>
 
-<form action="" method="post">
+<form action="" method="POST">
     <div id="addMem" class="addMem" type="button" onclick="clickMe()">
         <img src="{{url_for('static', filename='icon/plus1.png')}}"/>
     </div>
-    <input class="mem_file" type="file" accept=".jpg, .jpeg, .png"/>
+    <input class="mem_file" type="file" accept=".jpg, .jpeg, .png" hidden/>
 </form>
 <div class="contain">
     <div class="profile">
-        <img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar'/>
+        <form action="" method="POST">
+            <a href="#`"><img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar'/></a>
+            <input type="file" accept=".jpg, .jpeg, .png" class="avatar_file" hidden>
+        </form>
         <div class="information">
             <p class="name">{{ current_user.username }}</p>
             <p class="added">Pictures added {{ current_user.amount }}</p>
@@ -31,23 +34,41 @@ My account
         <!-- Тулзы для поиска -->
         <div class="tools">
             <!-- Кнопка с выпадающим меню-->
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
-                         class="bi bi-filter" viewBox="0 0 16 16">
-                        <path
-                                d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
-                    </svg>
-                    По дате добавления
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
+            <form action="" method="GET">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                             class="bi bi-filter" viewBox="0 0 16 16">
+                            <path
+                                    d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                        </svg>
+                        {% if not sort_name %}
+                            По дате добавления
+                        {% else %}
+                            {% if sort_name == 'by_title' %}
+                                По названию
+                            {% endif %}
+                            {% if sort_name == 'by_likes' %}
+                                По количеству лайков
+                            {% endif %}
+                            {% if sort_name == 'by_view' %}
+                                По популярности
+                            {% endif %}
+                        {% endif %}
+
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><button class="dropdown-item"  type="submit" name="sort" value="">По дате добавления</button></li>
+                        <li><button class="dropdown-item"  type="submit" name="sort" value="by_title">По названию</button></li>
+                        <li><button class="dropdown-item"  type="submit" name="sort" value="by_likes">По количеству лайков</button></li>
+                        <li><button class="dropdown-item"  type="submit" name="sort" value="by_view">По популярности</button></li>
+                    </ul>
+                </div>
+
+            </form>
         </div>
+
         <!-- Конец кнопки -->
         <!-- Строка поиска -->
 
@@ -156,6 +177,11 @@ My account
 		let buttonStatys = false;
 		const passElem = document.querySelector(".addMem")
         const memFile = document.querySelector(".mem_file")
+		const avatarFile = document.querySelector(".avatar_file")
+		const avatar = document.getElementById('avatar')
+		avatar.addEventListener('onclick', function(event) {
+		    avatarFile.click()
+		})
 		passElem.onanimationend = function () {
 			this.classList.remove("button-animation");
 		};
@@ -187,8 +213,33 @@ My account
       console.error(error)
     })
 }
+// Аватарки
+const handleAvatarImage = event => {
+      const files = event.target.files
+      const formData = new FormData()
+      formData.append('image', files[0])
+      formData.append('owner_id', "{{ current_user.uid }}")
+  fetch('/avatar', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => {
+      console.log(response.json())
+
+    })
+    .then(data => {
+      console.log(data)
+
+    })
+    .catch(error => {
+      console.error(error)
+    })
+}
 memFile.onchange = function (event) {
   handleImageUpload(event)
+}
+avatarFile.onchange = function(event) {
+    handleAvatarUpload(event)
 }
 	</script>
 <script src="{{ url_for('static', filename='script/account.js') }}"></script>
