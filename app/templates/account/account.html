@@ -7,6 +7,7 @@ My account
 {% endblock %}
 {% block content %}
 <link href="{{ url_for('static', filename='style/account.css', v=1) }}" rel="stylesheet">
+
 <body>
 <div class="placeDragAndDrop">
     <div class="dragAndDrop">Перетащите сюда мем</div>
@@ -104,13 +105,18 @@ My account
                      src="{{ i.link }}"
                      alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{ i.name }}</h5>
-                    <p class="card-text">{{ i.description }}</p><br/>
-                    <span>&#10084;{{ i.likes }}</span>
-                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
+                    {% if i.name %}
+                        <h5 class="card-title">{{ i.name }}</h5>
+                    {% endif %}
+
+                    {% if i.description %}
+                        <p class="card-text">{{ i.description }}</p><br/>
+                    {% endif %}
+                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Open</a>
                     <button type="button" id="btn_delete_{{ i.id }}" class="btn btn-danger">
                         Remove
-                    </button>
+                    </button><br/>
+                    <div class="view_panel"><span class="card_likes"><img width="18" height="18" src="{{ url_for('static', filename='icon/like.svg') }} "/> {{ i.likes }}</span> <span class="card_views"><img width="25" height="25" src="{{ url_for('static', filename='icon/eye.svg') }} "/> {{ i.view }}</span></div>
                     <script>
                     btnDelete = document.getElementById('btn_delete_{{ i.id }}')
                     function deleteEvent(event) {
@@ -234,7 +240,7 @@ placeDragAndDrop.addEventListener('drop', event => {
     // Делаю файл пустым, если скинули больше одного файла или не тот тип
     // Дизайн и анимации потом сделаю
     file = null
-    alert('Неверный тип файла')
+    leavePlaceDragAndDrop()
     return
   }
       const formData = new FormData()

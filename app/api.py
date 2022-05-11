@@ -62,8 +62,14 @@ class MemeApi(Resource):
         Response data:
             mem: str - mem json
         """
-
-        return Mem.query.filter_by(id=id).first_or_404()
+        mem = Mem.query.filter_by(id=id).first()
+        if mem:
+            mem.view += 1
+            db.session.add(mem)
+            db.session.commit()
+        else:
+            return 404
+        return mem
 
     def post(self):
         """
@@ -102,7 +108,8 @@ class MemeApi(Resource):
         parser.add_argument('owner_id')
         params = parser.parse_args()
         id = params['id']
-
+        if not params['onwer_id']:
+            return 403
         account = Account.query.filter_by(uid=params['owner_id']).first()
         if account is None:
             return Response("{}", status=403)
@@ -149,15 +156,18 @@ class MemeApi(Resource):
         parser.add_argument('like')
         params = parser.parse_args()
         print(params)
+        if not params['owner_id']:
+            return Response("{}", 403)
         requester = Account.query.filter_by(uid=params['owner_id']).first()
         mem = Mem.query.filter_by(id=params['id']).first()
         owner = Account.query.filter_by(id=mem.owner_id).first()
         if requester.uid != owner.uid:
-            return 403
+            return Response("{}", 403)
         mem.status = int(params['status'] == 'true')
         mem.name = params['name']
         mem.description = params['description']
-        mem.tags = self.tag_service.parse_tag(params['tags'])
+        if params['tags']:
+            mem.tags = self.tag_service.parse_tag(params['tags'])
         mem.likes += int(params['like'] == 'true')
         db.session.add(mem)
         db.session.commit()

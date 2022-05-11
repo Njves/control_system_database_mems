@@ -210,3 +210,9 @@ nav {
     display: none;
 }
 
+.card_views {
+    float: right;
+}
+.view_panel {
+    float: view_panel;
+}

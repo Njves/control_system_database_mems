@@ -9,7 +9,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
 from app import app, db
-from app.models import Account, Mem
+from app.models import Account, Mem, Tag
 from app.service import ImageService
 
 
@@ -19,13 +19,22 @@ def index():
     Main page
     """
     # get only public memes
-    query = request.args.get('query')
-    memes = Mem.query.filter_by(status=1)
+    query = request.args.get('query', default='')
+    sort_name = request.args.get('sort', default='')
+    memes_query = Mem.query.filter_by(status=1)
+    sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
+                    'by_likes': memes_query.order_by(desc(Mem.likes)),
+                    'by_view': memes_query.order_by(desc(Mem.view))}
     if query:
-        memes = Mem.query.filter(Mem.name.contains(query) and Mem.status == 1).all()
-    else:
-        query = ''
-    return render_template('public/public.html', mems=memes, query=query)
+        memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
+        tag = Tag.query.filter(Tag.name.contains(query)).all()
+        print(tag)
+    if sort_name:
+        memes_query = sort_various.get(sort_name, '')
+    memes = memes_query.all()
+    for i in memes:
+        print(i.tags)
+    return render_template('public/public.html', mems=memes, query=query, sort_name=sort_name)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -76,14 +85,14 @@ def account():
 
     sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
                     'by_likes': memes_query.order_by(desc(Mem.likes)),
-                    'by_views': 'views'}
+                    'by_view': memes_query.order_by(desc(Mem.view))}
     if query:
         print("Effect")
         memes_query = memes_query.filter(Mem.name.ilike("%" + query + "%"))
     if sort_name:
         memes_query = sort_various.get(sort_name, '')
     memes = memes_query.all()
-
+    print(memes)
     return render_template('account/account.html', mems=memes, query=query, sort_name=sort_name)
 
 
@@ -106,6 +115,9 @@ def mem(meme_id):
             mem_tags += tag.name + ', '
         else:
             mem_tags += tag.name
+    mem.view += 1
+    db.session.add(mem)
+    db.session.commit()
     return render_template('meme/meme.html', img=img, mem=mem, mem_tags=mem_tags)
 
 
@@ -115,14 +127,8 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.errorhandler(werkzeug.exceptions.Unauthorized)
-def handle_unauthorized_error(e):
-    return ":))))", 401
-
-
 @app.route("/redirect")
 def add_new_mem(meme_id):
     return redirect(url_for('mem', meme_id=meme_id), 301)
 
 
-app.register_error_handler(401, handle_unauthorized_error)

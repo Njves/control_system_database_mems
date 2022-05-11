@@ -62,7 +62,7 @@ Meme
                 })
                 checkbox.checked = {{ mem.status }}
                 const button = document.getElementById('send');
-                send.addEventListener('click', function(event) {
+                function updateMeme(event) {
                     const formData = new FormData()
                     formData.append('id', {{ mem.id }})
                     formData.append('status', checkbox.checked)
@@ -75,18 +75,20 @@ Meme
                         method: 'put',
                         body: formData
                       })
-                       .then(response => {
-                          console.log(response.json())
+                       .then(function(response) {
+                          console.log(response.status)
+                          showToast(response.status)
                         })
                       .then(data => {
-                        console.log(data.path)
+                        console.log(data)
 
                       })
                       .catch(error => {
                         console.error(error)
                       })
 
-                })
+                }
+                send.addEventListener('click', updateMeme)
 
 
     </script>
