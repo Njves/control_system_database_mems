@@ -43,6 +43,7 @@ class Mem(db.Model):
                f" ('likes': {self.likes})," \
                f" ('status': {self.status}," \
                f" ('uid': {self.uid})," \
+               f" ('tags': {self.tags})," \
                f" ('owner_id': {self.owner_id}"
 
 

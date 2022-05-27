@@ -81,38 +81,16 @@ Community
                         <p class="card-text">{{ i.description }}</p>
                     {% endif %}
                     <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary" id="card_action_open">Open</a><br/>
+                    <form method="GET" class="tag_list">
+                    {% for tag in i.tags %}
+                            <button class="tag_view" type="submit" name="query" value="{{ tag.name }}"><strong>{{ tag.name }}</strong></button>
+                    {% endfor %}
+                    </form>
                     <div class="view_panel">
-                        
                         <span class="card_likes"><img width="18" height="18" src="{{ url_for('static', filename='icon/like.svg') }} "/> {{ i.likes }}</span>
                         <div style="display: inline;"><img src="{{ url_for('static', filename='images/avatars/avatar_placeholder.png') }}" height="30" width="30" /> <span>{{ i.owner.username }}</span></div>
                         <span class="card_views"><img width="25" height="25" src="{{ url_for('static', filename='icon/eye.svg') }} "/> {{ i.view }}</span>
                     </div>
-                    <script>
-
-                        btnDelete = document.getElementById('btn_delete_{{ i.id }}')
-                        function deleteEvent(event) {
-                            const formData = new FormData()
-                            formData.append('id', {{ i.id }})
-                        formData.append('owner_id', '{{ current_user.uid }}')
-                        fetch('/meme/delete', {
-                            method: 'DELETE',
-                            body: formData
-                        })
-                            .then(response => {
-                                console.log(response)
-                                response.json()
-                                //location.reload()
-                            })
-                            .then(data => {
-
-                            })
-                            .catch(error => {
-                                console.error(error)
-
-                            })
-                    }
-                        btnDelete.addEventListener('click', deleteEvent)
-                    </script>
                 </div>
 
                 <!-- Это конец карточки -->

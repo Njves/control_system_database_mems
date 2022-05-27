@@ -22,18 +22,29 @@ def index():
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
     memes_query = Mem.query.filter_by(status=1)
+    all_memes = memes_query.all()
+    print("all_memes", all_memes)
+
     sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
                     'by_likes': memes_query.order_by(desc(Mem.likes)),
                     'by_view': memes_query.order_by(desc(Mem.view))}
+    found_tagged_mem = []
     if query:
         memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
-        tag = Tag.query.filter(Tag.name.contains(query)).all()
-        print(tag)
+        for current_mem in all_memes:
+            for tag in current_mem.tags:
+                print(tag, tag.name.startswith(query))
+                if tag.name.startswith(query):
+                    found_tagged_mem.append(current_mem)
+
+
     if sort_name:
         memes_query = sort_various.get(sort_name, '')
     memes = memes_query.all()
-    for i in memes:
-        print(i.tags)
+    for i in found_tagged_mem:
+        if i not in memes:
+            memes.append(i)
+    print(memes)
     return render_template('public/public.html', mems=memes, query=query, sort_name=sort_name)
 
 
@@ -48,13 +59,13 @@ def register():
         password = form['password']
         password_repeat = form['password_repeat']
         if password != password_repeat:
-            flash('password is not same')
+            flash('Пароли не совпадают')
             return redirect(url_for('register'))
         user_account = Account(username=username, email=email)
         user_account.set_password(password)
         db.session.add(user_account)
         db.session.commit()
-        flash("Success!")
+        flash("Вы успешно вошли!")
         return redirect(url_for('index'))
     return render_template('register/register.html')
 
@@ -82,16 +93,25 @@ def account():
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
     memes_query = Mem.query.filter_by(owner_id=current_user.id)
-
+    all_memes = memes_query.all()
     sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
                     'by_likes': memes_query.order_by(desc(Mem.likes)),
                     'by_view': memes_query.order_by(desc(Mem.view))}
+    found_tagged_mem = []
     if query:
-        print("Effect")
-        memes_query = memes_query.filter(Mem.name.ilike("%" + query + "%"))
+        memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
+        for current_mem in all_memes:
+            for tag in current_mem.tags:
+                print(tag, tag.name.startswith(query))
+                if tag.name.startswith(query):
+                    found_tagged_mem.append(current_mem)
+
     if sort_name:
         memes_query = sort_various.get(sort_name, '')
     memes = memes_query.all()
+    for i in found_tagged_mem:
+        if i not in memes:
+            memes.append(i)
     print(memes)
     return render_template('account/account.html', mems=memes, query=query, sort_name=sort_name)
 

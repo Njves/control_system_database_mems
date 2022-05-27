@@ -214,5 +214,25 @@ nav {
     float: right;
 }
 .view_panel {
-    float: view_panel;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
 }
+#card_action_open {
+    margin-bottom: 15px;
+}
+
+.tag_list {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.tag_view {
+    border: initial;
+    background-color: initial;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+}
+

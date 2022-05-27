@@ -15,7 +15,7 @@ My account
 
 <form action="" method="POST">
     <div id="addMem" class="addMem" type="button" onclick="clickMe()">
-        <img src="{{url_for('static', filename='icon/plus1.png')}}"/>
+        <img src="{{url_for('static', filename='icon/plus-vector.svg')}}"/>
     </div>
     <input class="mem_file" type="file" accept=".jpg, .jpeg, .png" hidden/>
 </form>
@@ -116,7 +116,12 @@ My account
                     <button type="button" id="btn_delete_{{ i.id }}" class="btn btn-danger">
                         Remove
                     </button><br/>
-                    <div class="view_panel"><span class="card_likes"><img width="18" height="18" src="{{ url_for('static', filename='icon/like.svg') }} "/> {{ i.likes }}</span> <span class="card_views"><img width="25" height="25" src="{{ url_for('static', filename='icon/eye.svg') }} "/> {{ i.view }}</span></div>
+                    <form method="GET" class="tag_list">
+                    {% for tag in i.tags %}
+                            <button class="tag_view" type="submit" name="query" value="{{ tag.name }}"><strong>{{ tag.name }}</strong></button>
+                    {% endfor %}
+                    </form>
+                    <div class="view_panel"><span id="mini_like" class="card_likes"><img width="18" height="18" src="{{ url_for('static', filename='icon/like.svg') }} "/> {{ i.likes }}</span> <span class="card_views"><img width="25" height="25" src="{{ url_for('static', filename='icon/eye.svg') }} "/> {{ i.view }}</span></div>
                     <script>
                     btnDelete = document.getElementById('btn_delete_{{ i.id }}')
                     function deleteEvent(event) {
@@ -140,6 +145,7 @@ My account
                       })
                     }
                     btnDelete.addEventListener('click', deleteEvent)
+
                     </script>
                     <!-- <form method="POST" action="meme/delete" id="delete_form">
                          <input type="hidden" name="_method" value="DELETE" />

@@ -11,6 +11,7 @@ from random import randint
 from app import api_flask, db
 from app.models import Mem, Account
 from app.service import ImageService, TagService
+import json
 
 
 class UploadImage(Resource):
@@ -108,7 +109,7 @@ class MemeApi(Resource):
         parser.add_argument('owner_id')
         params = parser.parse_args()
         id = params['id']
-        if not params['onwer_id']:
+        if not params['owner_id']:
             return 403
         account = Account.query.filter_by(uid=params['owner_id']).first()
         if account is None:
@@ -161,14 +162,17 @@ class MemeApi(Resource):
         requester = Account.query.filter_by(uid=params['owner_id']).first()
         mem = Mem.query.filter_by(id=params['id']).first()
         owner = Account.query.filter_by(id=mem.owner_id).first()
+        tag_list = json.loads(params['tags'])
+        print(tag_list)
         if requester.uid != owner.uid:
             return Response("{}", 403)
         mem.status = int(params['status'] == 'true')
         mem.name = params['name']
         mem.description = params['description']
         if params['tags']:
-            mem.tags = self.tag_service.parse_tag(params['tags'])
-        mem.likes += int(params['like'] == 'true')
+            mem.tags = self.tag_service.parse_tag(tag_list)
+        like = int(params['like'] == 'true')
+        mem.likes += like
         db.session.add(mem)
         db.session.commit()
 

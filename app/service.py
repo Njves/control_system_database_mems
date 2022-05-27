@@ -49,25 +49,23 @@ class TagService(Service):
     Tag service need to processing with tag
     """
 
-    def parse_tag(self, raw_str: str) -> list[Tag]:
+    def parse_tag(self, tags_dict: list) -> list[Tag]:
         """
         example raw_str: cats, woman, anime
         result: [cats, woman, anime]
         """
+
         # разделяет тэги по запятым,потом очищает пробелы, потом приводит к нижнему регистру
-        raw_tag = (list(map(str.lower, list(map(str.strip, raw_str.split(','))))))
-        raw_tag = [i for i, _ in itertools.groupby(raw_tag)]
-        for index, value in enumerate(raw_tag):
-            raw_tag[index] = value.replace(' ', '')
-        print(raw_tag)
+
         tags = []
-        for name in raw_tag:
-            exist_tag = Tag.query.filter_by(name=name).first()
-            if not exist_tag:
-                tag = self.add_tag(name)
-                tags.append(tag)
-            else:
-                tags.append(exist_tag)
+        for i in tags_dict:
+            for key, name in i.items():
+                exist_tag = Tag.query.filter_by(name=name).first()
+                if not exist_tag:
+                    tag = self.add_tag(name)
+                    tags.append(tag)
+                else:
+                    tags.append(exist_tag)
         return tags
 
     def add_tag(self, name: str):
