@@ -10,6 +10,7 @@ Community
 
 {% block content %}
 <link href="{{ url_for('static', filename='style/public.css', v=1) }}" rel="stylesheet" />
+
 <!-- Тулзы для поиска -->
 <!-- Button trigger modal -->
 
@@ -18,33 +19,40 @@ Community
         <!-- Тулзы для поиска -->
         <div class="tools">
             <!-- Кнопка с выпадающим меню-->
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
-                         class="bi bi-filter" viewBox="0 0 16 16">
-                        <path
-                                d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
-                    </svg>
-                    По дате добавления
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
+            <form action="" method="GET" >
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                             class="bi bi-filter" viewBox="0 0 16 16">
+                            <path
+                                    d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                        </svg>
+                        По дате добавления
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><button class="dropdown-item">По дате добавления</button></li>
+                        <li><button class="dropdown-item" type="submit" name="sort" value="by_title">По
+                            названию</button></li>
+                        <li><button class="dropdown-item" type="submit" name="sort" value="by_likes">По количеству
+                            лайков</button></li>
+                        <li><button class="dropdown-item" type="submit" name="sort" value="by_view">По
+                            популярности</button></li>
+                    </ul>
+                </div>
+
+            </form>
         </div>
         <!-- Конец кнопки -->
         <!-- Строка поиска -->
-       <form class="search" action="" method="GET" id="search_form">
+        <form class="search" action="" method="GET" id="search_form">
             <div class="input-group mb-3">
 
                 <input type="text" class="form-control" placeholder="Поиск" aria-label="Username"
                        aria-describedby="basic-addon1" name="query" id="input_search" value="{{ query }}">
                 <button class="input-group-text" id="basic-addon1" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor" class="bi bi-search"
-                         viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor"
+                         class="bi bi-search" viewBox="0 0 16 16">
                         <path
                                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                     </svg>
@@ -56,7 +64,6 @@ Community
         <!-- Конец строки поиска -->
     </div>
 
-
     <!-- Grid сетка-->
     <div class="containerTags">
         <!-- Grid сетка-->
@@ -67,38 +74,23 @@ Community
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ i.link }}" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{ i.name }}</h5>
-                    <p class="card-text">{{ i.description }}</p>
-                    <img src="{{ url_for('static', filename='images/avatars/avatar_placeholder.png') }}" height="30"
-                         width="30" /> <span>Author: {{ i.owner.username }}</span><br/>
-                    <span>&#10084;{{ i.likes }}</span>
-                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Go somewhere</a>
-                    <script>
-
-                        btnDelete = document.getElementById('btn_delete_{{ i.id }}')
-                        function deleteEvent(event) {
-                            const formData = new FormData()
-                            formData.append('id', {{ i.id }})
-                            formData.append('owner_id','{{ current_user.uid }}')
-                        fetch('/meme/delete', {
-                            method: 'DELETE',
-                            body: formData
-                        })
-                            .then(response => {
-                                console.log(response)
-                                response.json()
-                                //location.reload()
-                            })
-                            .then(data => {
-
-                            })
-                            .catch(error => {
-                                console.error(error)
-
-                            })
-                    }
-                        btnDelete.addEventListener('click', deleteEvent)
-                    </script>
+                    {% if i.name %}
+                        <h5 class="card-title">{{ i.name }}</h5>
+                    {% endif %}
+                    {% if i.description %}
+                        <p class="card-text">{{ i.description }}</p>
+                    {% endif %}
+                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary" id="card_action_open">Open</a><br/>
+                    <form method="GET" class="tag_list">
+                    {% for tag in i.tags %}
+                            <button class="tag_view" type="submit" name="query" value="{{ tag.name }}"><strong>{{ tag.name }}</strong></button>
+                    {% endfor %}
+                    </form>
+                    <div class="view_panel">
+                        <span class="card_likes"><img width="18" height="18" src="{{ url_for('static', filename='icon/like.svg') }} "/> {{ i.likes }}</span>
+                        <div style="display: inline;"><img src="{{ url_for('static', filename='images/avatars/avatar_placeholder.png') }}" height="30" width="30" /> <span>{{ i.owner.username }}</span></div>
+                        <span class="card_views"><img width="25" height="25" src="{{ url_for('static', filename='icon/eye.svg') }} "/> {{ i.view }}</span>
+                    </div>
                 </div>
 
                 <!-- Это конец карточки -->
@@ -107,8 +99,6 @@ Community
         {% endfor %}
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 {% endblock %}

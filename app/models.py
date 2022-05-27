@@ -25,6 +25,7 @@ class Mem(db.Model):
     likes = db.Column(db.Integer, default=0)
     status = db.Column(db.Integer, nullable=False, default=0, comment='Access level, 0 - private, 1 - public')
     uid = db.Column(db.String(128), comment='unique id mem')
+    view = db.Column(db.Integer, default=0, comment="Number of views")
     owner_id = db.Column(db.Integer, db.ForeignKey('account.id'))
     tags = db.relationship('Tag', secondary=mem_tag, backref=db.backref('mems'))
 
@@ -42,6 +43,7 @@ class Mem(db.Model):
                f" ('likes': {self.likes})," \
                f" ('status': {self.status}," \
                f" ('uid': {self.uid})," \
+               f" ('tags': {self.tags})," \
                f" ('owner_id': {self.owner_id}"
 
 
@@ -67,7 +69,7 @@ class Account(UserMixin, db.Model):
     picture = db.Column(db.String(128), comment='link to avatar')
     amount = db.Column(db.Integer, default=0, comment='amount loaded mems')
     mems = db.relationship('Mem', backref='owner', lazy='dynamic')
-    uid = db.Column(db.String(128), default=str(uuid.uuid4()), comment="unique user id")
+    uid = db.Column(db.String(128), nullable=False, default=str(uuid.uuid4()), comment="unique user id")
 
     def __eq__(self, other):
         return self.id == other.id and self.username == other.username and self.email == other.email and \

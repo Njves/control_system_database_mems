@@ -31,6 +31,7 @@ form {
 }
 
 .toggleBox{
+    display: inline-block;
     font-weight: bold;
 }
 
@@ -92,11 +93,14 @@ input:checked[type="checkbox"]::before{
    color: #34495e
 }
 
-@media (max-width: 992px) {
-    #login  {
-        display: none;
-    }
+
+.input_tags_form{
+    align-items: flex-start;
+    justify-content: start;
+    text-align: left;
+    margin-top: 8px;
 }
+
 
 [id='toggle-heart'] {
   position: absolute;
