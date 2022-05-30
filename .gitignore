@@ -18,7 +18,6 @@ _mailinglist
 .idea/
 docs/_build/
 .vscode
-migrations/
 __pycache__/
 app/__pycache__/
 # Coverage reports
@@ -26,5 +25,4 @@ htmlcov/
 .coverage
 .coverage.*
 *,cover
-images/
-app.db
+
