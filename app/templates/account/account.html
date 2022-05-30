@@ -22,7 +22,7 @@ My account
 <div class="contain">
     <div class="profile">
         <form action="" method="POST">
-            <a href="#`"><img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar'/></a>
+            <a href="#"><img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar'/></a>
             <input type="file" accept=".jpg, .jpeg, .png" class="avatar_file" hidden>
         </form>
         <div class="information">
@@ -242,7 +242,7 @@ placeDragAndDrop.addEventListener('drop', event => {
   let file = event.dataTransfer.files
   const files = event.target.files
   if(!((file.length == 1) && types.includes(file[0].type))) {
-    console.log("Error file")
+    showToast('Неверный тип файла')
     // Делаю файл пустым, если скинули больше одного файла или не тот тип
     // Дизайн и анимации потом сделаю
     file = null
