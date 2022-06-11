@@ -162,15 +162,15 @@ class MemeApi(Resource):
         requester = Account.query.filter_by(uid=params['owner_id']).first()
         mem = Mem.query.filter_by(id=params['id']).first()
         owner = Account.query.filter_by(id=mem.owner_id).first()
-        tag_list = json.loads(params['tags'])
+
+        tag_list = json.loads(params['tags']) if params['tags'] else ''
         print(tag_list)
         if requester.uid != owner.uid:
             return Response("{}", 403)
         mem.status = int(params['status'] == 'true')
         mem.name = params['name']
         mem.description = params['description']
-        if params['tags']:
-            mem.tags = self.tag_service.parse_tag(tag_list)
+        mem.tags = self.tag_service.parse_tag(tag_list)
         like = int(params['like'] == 'true')
         mem.likes += like
         db.session.add(mem)

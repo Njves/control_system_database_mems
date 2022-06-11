@@ -4,11 +4,14 @@ and interaction with the external environment of the application
 """
 import uuid
 import os
+
+from PIL import Image
 from werkzeug.datastructures import FileStorage
 
 from app.models import Tag
 from app import db
 import itertools
+
 
 class Service:
     def __init__(self):
@@ -18,7 +21,6 @@ class Service:
 class ImageService(Service):
     IMG_PATH_DIR = 'app/static/images/'
     IMG_PATH = 'static/images/'
-
 
     def save(self, file: FileStorage) -> str:
         """
@@ -31,6 +33,7 @@ class ImageService(Service):
         if file.mimetype.split('/')[0] == 'image':
             filename = f"{name.split('-')[0]}.{file.mimetype.split('/')[1]}"
             file.save(dst=self.IMG_PATH_DIR + filename)
+            Compress().compress(self.IMG_PATH_DIR + filename)
             return filename
         return ''
 
@@ -44,6 +47,7 @@ class ImageService(Service):
         except FileNotFoundError:
             print("Файла не существует")
 
+
 class TagService(Service):
     """
     Tag service need to processing with tag
@@ -54,8 +58,6 @@ class TagService(Service):
         example raw_str: cats, woman, anime
         result: [cats, woman, anime]
         """
-
-        # разделяет тэги по запятым,потом очищает пробелы, потом приводит к нижнему регистру
 
         tags = []
         for i in tags_dict:
@@ -74,3 +76,25 @@ class TagService(Service):
         db.session.commit()
         return tag
 
+
+class Compress(Service):
+    ref_size = 300, 300
+
+    def get_coef_compress(self, size: tuple):
+        """ Функция возвращающая коэффициент сжатия
+            Смотрим на отношение к эталлоному размеру и берем половину этого отношения
+        """
+        return (sum(size) // sum(Compress.ref_size)) // 2
+
+    def compress(self, link: str):
+        """
+        Функция принимающая на вход ширину и высоту и ссылку
+        картинки которую нужно сжать
+        """
+        # размеры к которому стремится изображение
+
+        image = Image.open(link)
+        size = image.size
+        coef = self.get_coef_compress(size)
+        image = image.resize((size[0] // coef, size[1] // coef), Image.ANTIALIAS)
+        image.save(link)
