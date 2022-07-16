@@ -10,7 +10,7 @@ from flask_restful import Resource, reqparse
 from random import randint
 from app import api_flask, db
 from app.models import Mem, Account
-from app.service import ImageService, TagService
+from app.service import ImageService, TagService, Compress
 import json
 
 
@@ -167,6 +167,7 @@ class MemeApi(Resource):
         print(tag_list)
         if requester.uid != owner.uid:
             return Response("{}", 403)
+        mem.id = params['id']
         mem.status = int(params['status'] == 'true')
         mem.name = params['name']
         mem.description = params['description']
@@ -177,5 +178,28 @@ class MemeApi(Resource):
         db.session.commit()
 
 
+class AvatarApi(Resource):
+    def get(self, id=0):
+        account = Account.query.filter_by(uid=id).first()
+        return account.picture
+
+    def post(self):
+        service = ImageService()
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', required=True)
+        parser.add_argument('picture', type=werkzeug.datastructures.FileStorage, location='files', required=True)
+        params = parser.parse_args()
+        account = Account.query.filter_by(uid=params['id']).first()
+
+        image_link = service.save_avatar(params['picture'])
+
+        account.picture = 'images/avatars/' + image_link
+        print(account.picture)
+        db.session.add(account)
+        db.session.commit()
+        return Response('{}', 201)
+
+
 api_flask.add_resource(UploadImage, '/upload', '/upload/')
 api_flask.add_resource(MemeApi, '/meme/create', '/meme/delete', '/meme/put', '/meme/get/<int:id>')
+api_flask.add_resource(AvatarApi, '/avatar/download', '/avatar/get/<int:id>')

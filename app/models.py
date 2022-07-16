@@ -15,6 +15,12 @@ mem_tag = db.Table('MemTag',
                    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
                    comment='Auxiliary table of meme and tag connection')
 
+roles_account = db.Table(
+    'AccountRole',
+    db.Column('account_id', db.Integer(), db.ForeignKey('account.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+)
+
 
 class Mem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,9 +36,9 @@ class Mem(db.Model):
     tags = db.relationship('Tag', secondary=mem_tag, backref=db.backref('mems'))
 
     def __eq__(self, other):
-        return self.id == other.id and self.name == other.name and self.link == other.link and self.date == other.date and\
-                self.description == other.description and self.likes == other.likes and self.status == other.status and self.uid == other.uid and\
-                self.owner_id == other.owner_id and self.tags == other.tags
+        return self.id == other.id and self.name == other.name and self.link == other.link and self.date == other.date and \
+               self.description == other.description and self.likes == other.likes and self.status == other.status and self.uid == other.uid and \
+               self.owner_id == other.owner_id and self.tags == other.tags
 
     def __repr__(self):
         return f"Mem: ('id': {self.id})," \
@@ -70,6 +76,8 @@ class Account(UserMixin, db.Model):
     amount = db.Column(db.Integer, default=0, comment='amount loaded mems')
     mems = db.relationship('Mem', backref='owner', lazy='dynamic')
     uid = db.Column(db.String(128), nullable=False, default=str(uuid.uuid4()), comment="unique user id")
+    roles = db.relationship('Role', secondary=roles_account,
+                            backref=db.backref('accounts', lazy='dynamic'))
 
     def __eq__(self, other):
         return self.id == other.id and self.username == other.username and self.email == other.email and \
@@ -87,3 +95,12 @@ class Account(UserMixin, db.Model):
                f" ('date': {self.date})," \
                f" ('picture': {self.picture})," \
                f" ('amount': {self.amount}),"
+
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    description = db.Column(db.String(255))
+
+    def __str__(self):
+        return self.name

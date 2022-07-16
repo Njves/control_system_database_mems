@@ -6,9 +6,11 @@ import uuid
 import os
 
 from PIL import Image
+from flask import request
+from sqlalchemy import asc, desc
 from werkzeug.datastructures import FileStorage
 
-from app.models import Tag
+from app.models import Tag, Mem
 from app import db
 import itertools
 
@@ -21,6 +23,8 @@ class Service:
 class ImageService(Service):
     IMG_PATH_DIR = 'app/static/images/'
     IMG_PATH = 'static/images/'
+    IMG_AVATAR_PATH_DIR = 'app/static/images/avatars/'
+    IMG_AVATAR_PATH = 'static/images/avatars/'
 
     def save(self, file: FileStorage) -> str:
         """
@@ -34,6 +38,21 @@ class ImageService(Service):
             filename = f"{name.split('-')[0]}.{file.mimetype.split('/')[1]}"
             file.save(dst=self.IMG_PATH_DIR + filename)
             Compress().compress(self.IMG_PATH_DIR + filename)
+            return filename
+        return ''
+
+    def save_avatar(self, file: FileStorage):
+        """
+                The method saves image to file system
+                Save path app/static/images/
+                FileStorage it's flask wrapper over http files
+                """
+        name = str(uuid.uuid4())
+        # checks mime-type if it's image, save else return blank string
+        if file.mimetype.split('/')[0] == 'image':
+            filename = f"{name.split('-')[0]}.{file.mimetype.split('/')[1]}"
+            file.save(dst=self.IMG_AVATAR_PATH_DIR + filename)
+            Compress().convert_picture(self.IMG_AVATAR_PATH_DIR + filename)
             return filename
         return ''
 
@@ -80,21 +99,54 @@ class TagService(Service):
 class Compress(Service):
     ref_size = 300, 300
 
-    def get_coef_compress(self, size: tuple):
-        """ Функция возвращающая коэффициент сжатия
-            Смотрим на отношение к эталлоному размеру и берем половину этого отношения
-        """
-        return (sum(size) // sum(Compress.ref_size)) // 2
-
     def compress(self, link: str):
         """
         Функция принимающая на вход ширину и высоту и ссылку
         картинки которую нужно сжать
         """
-        # размеры к которому стремится изображение
-
         image = Image.open(link)
-        size = image.size
-        coef = self.get_coef_compress(size)
-        image = image.resize((size[0] // coef, size[1] // coef), Image.ANTIALIAS)
+        width, height = image.size
+        if width > 1024 or height > 1024:
+            image = image.resize((1024, 1024), Image.ANTIALIAS)
         image.save(link)
+
+    @staticmethod
+    def convert_picture(link: str):
+        image = Image.open(link)
+        width, height = image.size
+        if width > height:
+            proportion = height / width
+            image.resize((100, int(height * proportion)), Image.ANTIALIAS)
+        else:
+            proportion = width / height
+            image.resize((int(width * proportion), 100), Image.ANTIALIAS)
+        image.save(link)
+
+
+class Query(Service):
+    def get_memes(self, current_id, query, sort_name):
+        if current_id:
+            memes_query = Mem.query.filter_by(owner_id=current_id).order_by(Mem.date.asc())
+        else:
+            memes_query = Mem.query.filter_by(status=1)
+        all_memes = memes_query.all()
+        sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
+                        'by_likes': memes_query.order_by(desc(Mem.likes)),
+                        'by_view': memes_query.order_by(desc(Mem.view))}
+        found_tagged_mem = []
+        if query:
+            memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
+            for current_mem in all_memes:
+                for tag in current_mem.tags:
+                    print(tag, tag.name.startswith(query))
+                    if tag.name.startswith(query):
+                        found_tagged_mem.append(current_mem)
+
+        if sort_name:
+            memes_query = sort_various.get(sort_name, '')
+        memes = memes_query.all()
+        for i in found_tagged_mem:
+            if i not in memes:
+                memes.append(i)
+        return memes
+

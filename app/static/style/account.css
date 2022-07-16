@@ -200,6 +200,10 @@ nav {
     height: 0;
 }
 
+#avatar_area {
+    cursor: pointer;
+}
+
 .send_image {
     display: block;
     visibility: hidden;
@@ -236,3 +240,10 @@ nav {
 
 }
 
+.message {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}

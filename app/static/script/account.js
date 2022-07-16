@@ -29,8 +29,8 @@ function enter(event) {
 
 function enterPlaceDragAndDrop(event) {
   event.preventDefault()
-  if(checkDragAndDrop) count += 1
-  if(count == 2) {
+  if (checkDragAndDrop) count += 1
+  if (count == 2) {
     checkLeave = false
     checkPlaceDragAndDrop = false
   }
@@ -38,9 +38,9 @@ function enterPlaceDragAndDrop(event) {
 
 function leavePlaceDragAndDrop(event) {
   event.preventDefault()
-  if(checkPlaceDragAndDrop && (count != 1)) {
+  if (checkPlaceDragAndDrop && (count != 1)) {
     placeDragAndDrop.style.visibility = 'hidden'
-    addEventListener('dragenter', enter, {once : true})
+    addEventListener('dragenter', enter, { once: true })
     dragAndDrop.innerHTML = 'Перетащите сюда мем'
   }
   checkPlaceDragAndDrop = true
@@ -66,7 +66,7 @@ dragAndDrop.addEventListener('dragleave', event => {
   event.preventDefault()
   checkDragAndDrop = false
   count = 0
-  if(checkLeave) {
+  if (checkLeave) {
     checkLeave = false
   }
 })
@@ -79,4 +79,4 @@ dragAndDrop.addEventListener('drop', event => {
   event.preventDefault()
 })
 
-addEventListener('dragenter', enter, {once : true})
+addEventListener('dragenter', enter, { once: true })

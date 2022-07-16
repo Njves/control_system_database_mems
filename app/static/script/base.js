@@ -1,8 +1,9 @@
+isShow = false;
 
 function showToast(message) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML = message
+  x.innerHTML = message;
   // Add the "show" class to DIV
   x.className = "show";
   // After 3 seconds, remove the show class from DIV

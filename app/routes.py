@@ -10,7 +10,7 @@ from werkzeug.utils import redirect
 
 from app import app, db
 from app.models import Account, Mem, Tag
-from app.service import ImageService
+from app.service import ImageService, Query
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -21,30 +21,9 @@ def index():
     # get only public memes
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
-    memes_query = Mem.query.filter_by(status=1)
-    all_memes = memes_query.all()
-    print("all_memes", all_memes)
+    service = Query()
+    memes = service.get_memes(None, query, sort_name)
 
-    sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
-                    'by_likes': memes_query.order_by(desc(Mem.likes)),
-                    'by_view': memes_query.order_by(desc(Mem.view))}
-    found_tagged_mem = []
-    if query:
-        memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
-        for current_mem in all_memes:
-            for tag in current_mem.tags:
-                print(tag, tag.name.startswith(query))
-                if tag.name.startswith(query):
-                    found_tagged_mem.append(current_mem)
-
-
-    if sort_name:
-        memes_query = sort_various.get(sort_name, '')
-    memes = memes_query.all()
-    for i in found_tagged_mem:
-        if i not in memes:
-            memes.append(i)
-    print(memes)
     return render_template('public/public.html', mems=memes, query=query, sort_name=sort_name)
 
 
@@ -92,27 +71,8 @@ def login():
 def account():
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
-    memes_query = Mem.query.filter_by(owner_id=current_user.id)
-    all_memes = memes_query.all()
-    sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
-                    'by_likes': memes_query.order_by(desc(Mem.likes)),
-                    'by_view': memes_query.order_by(desc(Mem.view))}
-    found_tagged_mem = []
-    if query:
-        memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
-        for current_mem in all_memes:
-            for tag in current_mem.tags:
-                print(tag, tag.name.startswith(query))
-                if tag.name.startswith(query):
-                    found_tagged_mem.append(current_mem)
-
-    if sort_name:
-        memes_query = sort_various.get(sort_name, '')
-    memes = memes_query.all()
-    for i in found_tagged_mem:
-        if i not in memes:
-            memes.append(i)
-    print(memes)
+    service = Query()
+    memes = service.get_memes(current_user.id, query, sort_name)
     return render_template('account/account.html', mems=memes, query=query, sort_name=sort_name)
 
 
