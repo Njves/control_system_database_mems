@@ -33,6 +33,7 @@ class UploadImage(Resource):
         params = parser.parse_args()
 
         image_file = params['image']
+        print(image_file)
         filename = service.save(image_file)
         lnk = ImageService.IMG_PATH + filename
         print(params)

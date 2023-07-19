@@ -11,102 +11,105 @@ Meme
 {% block content %}
 <link href="{{ url_for('static', filename='style/meme.css', v=1) }}" rel="stylesheet">
 <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 <div class="container">
 
-    <img src="{{ img }}" id="meme_image" alt="">
-    <form action="" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
+  <img src="{{ img }}" id="meme_image" alt="">
+  <form action="" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
 
-            <input class="form-control" type="file" id="formFile" name="picture" accept=".jpg, .jpeg, .png" disabled>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="input_name" placeholder="Название" name="name" value="{{ mem.name }}">
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="input_description" placeholder="Описание" name="description" value="{{ mem.description }}">
-        </div>
-        <div class="input_tags_form">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Тэги" id="input_tags" name="tags" value="{{ mem_tags }}" autofocus>
-            </div>
-        </div>
-        <div class="toggleBox">
-            Public
-            <div  class="toggle">
-                <input id="checkbox" type="checkbox">
-                <label class="togglebtn" for="" class="onbtn"></label>
-                <label class="togglebtn" for="" class="offbtn"></label>
-            </div>
-<div>
-                <input class="toggle-heart" id="toggle-heart" type="checkbox"/>
-                <label class="toggle-heart" for="toggle-heart" aria-label="like">❤</label>
-            </div>
-        </div>
+      <input class="form-control" type="file" id="formFile" name="picture" accept=".jpg, .jpeg, .png" disabled>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" id="input_name" placeholder="Название" name="name" value="{{ mem.name }}">
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" id="input_description" placeholder="Описание" name="description"
+        value="{{ mem.description }}">
+    </div>
+    <div class="input_tags_form">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Тэги" id="input_tags" name="tags" value="{{ mem_tags }}"
+          autofocus>
+      </div>
+    </div>
+    <!-- Like -->
+    <div class="toggleBox">
+      <span style="margin-right: 8px;">Public</span>
+      <div class="toggle">
+        <input id="checkbox" type="checkbox">
+        <label class="togglebtn" for="" class="onbtn"></label>
+        <label class="togglebtn" for="" class="offbtn"></label>
+      </div>
+      <div>
+        <input class="toggle-heart" id="toggle-heart" type="checkbox" />
+        <label class="toggle-heart" for="toggle-heart" aria-label="like">❤</label>
+      </div>
+    </div>
 
+    <div class="button-wrapper">
+      <button type="button" class="btn btn-success" id="send">Save</button>
+    </div>
 
+  </form>
 
-        <div class="button-wrapper">
-            <button type="button" class="btn btn-success" id="send">Save</button>
-        </div>
+  <script>
+    const checkbox = document.getElementById('checkbox')
+    const input_name = document.getElementById('input_name')
+    const input_description = document.getElementById('input_description')
+    const input_tags = document.getElementById('input_tags')
+    const input_like = document.getElementById('toggle-heart')
+    checkbox.addEventListener('click', function (event) {
 
-    </form>
+    })
+    checkbox.checked = {{ mem.status }}
+    const button = document.getElementById('send');
+    function updateMeme(event) {
+      const formData = new FormData()
+      formData.append('id', {{ mem.id }})
+    formData.append('status', checkbox.checked)
+    formData.append('name', input_name.value)
+    formData.append('description', input_description.value)
+    formData.append('tags', input_tags.value);
+    formData.append('owner_id', "{{ current_user.uid }}")
+    formData.append('like', input_like.checked)
+    fetch('/meme/put', {
+      method: 'put',
+      body: formData
+    })
+      .then(function (response) {
+        console.log(response.status)
+        if (response.status == 200) {
+          showToast("Изменения сохранены")
+        }
+        if (response.status == 500) {
+          showToast("Что-то пошло не так")
+        }
+        if (response.status == 403) {
+          showToast("Вы не можете изменять эту картинку");
+        }
 
+      })
+      .then(data => {
+        console.log(data)
 
-    <script>
-
-                const checkbox = document.getElementById('checkbox')
-                const input_name = document.getElementById('input_name')
-                const input_description = document.getElementById('input_description')
-                const input_tags = document.getElementById('input_tags')
-                const input_like = document.getElementById('toggle-heart')
-                checkbox.addEventListener('click', function(event) {
-
-                })
-                checkbox.checked = {{ mem.status }}
-                const button = document.getElementById('send');
-                function updateMeme(event) {
-                    const formData = new FormData()
-                    formData.append('id', {{ mem.id }})
-                    formData.append('status', checkbox.checked)
-                    formData.append('name', input_name.value)
-                    formData.append('description', input_description.value)
-                    formData.append('tags', input_tags.value);
-                    formData.append('owner_id', "{{ current_user.uid }}")
-                    formData.append('like', input_like.checked)
-                    fetch('/meme/put', {
-                        method: 'put',
-                        body: formData
-                      })
-                       .then(function(response) {
-                          console.log(response.status)
-                          if(response.status == 200) {
-                            showToast("Изменения сохранены")
-                          }
-                          if(response.status == 500) {
-                            showToast("Что-то пошло не так")
-                          }
-                          if(response.status == 403) {
-                            showToast("Вы не можете изменять эту картинку");
-                          }
-
-                        })
-                      .then(data => {
-                        console.log(data)
-
-                      })
-                      .catch(error => {
-                        console.error(error)
-                      })
+      })
+      .catch(error => {
+        console.error(error)
+      })
 
                 }
-                send.addEventListener('click', updateMeme)
+    send.addEventListener('click', updateMeme)
 
 
-    </script>
+  </script>
 </div>
 <script src="https://unpkg.com/@yaireo/tagify"></script>
 <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 <script src="{{ url_for('static', filename='script/meme.js') }}"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 {% endblock %}

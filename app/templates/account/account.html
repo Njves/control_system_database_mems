@@ -12,121 +12,125 @@ My account
 <link href="{{ url_for('static', filename='style/account.css', v=1) }}" rel="stylesheet">
 
 <body>
-  <div class="placeDragAndDrop">
-    <div class="dragAndDrop">Перетащите сюда мем</div>
+<div class="placeDragAndDrop">
+  <div class="dragAndDrop">Перетащите сюда мем</div>
+</div>
+
+<form action="" method="POST">
+  <div id="addMem" class="addMem" type="button" onclick="clickMe()">
+    <img src="{{ url_for('static', filename='icon/plus-vector.svg' )}}" />
+  </div>
+  <input class="mem_file" type="file" accept=".jpg, .jpeg, .png" hidden />
+</form>
+<div class="contain">
+  <div class="profile">
+    <a id="avatar_area"><img src="{{ url_for('static', filename=current_user.picture)  }}" id='avatar'/></a>
+    <input type="file" accept=".jpg, .jpeg, .png" id="avatar_file" name="picture" hidden>
+    <div class="information">
+      <p class="name">{{ current_user.username }}</p>
+      <p class="added">Pictures added {{ current_user.amount }}</p>
+    </div>
   </div>
 
-  <form action="" method="POST">
-    <div id="addMem" class="addMem" type="button" onclick="clickMe()">
-      <img src="{{ url_for('static', filename='icon/plus-vector.svg' )}}" />
-    </div>
-    <input class="mem_file" type="file" accept=".jpg, .jpeg, .png" hidden />
-  </form>
-  <div class="contain">
-    <div class="profile">
-      <a id="avatar_area"><img src="{{ url_for('static', filename=current_user.picture) }}" id='avatar' /></a>
-      <input type="file" accept=".jpg, .jpeg, .png" id="avatar_file" name="picture" hidden>
-      <div class="information">
-        <p class="name">{{ current_user.username }}</p>
-        <p class="added">Pictures added {{ current_user.amount }}</p>
-      </div>
-    </div>
-
-    <div class="toolsSearch">
-      <!-- Тулзы для поиска -->
-      <div class="tools">
-        <!-- Кнопка с выпадающим меню-->
-        <form action="" method="GET">
-          <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-filter"
-                viewBox="0 0 16 16">
-                <path
-                  d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
-              </svg>
-              {% if not sort_name %}
-              По дате добавления
-              {% else %}
-              {% if sort_name == 'by_title' %}
-              По названию
-              {% endif %}
-              {% if sort_name == 'by_likes' %}
-              По количеству лайков
-              {% endif %}
-              {% if sort_name == 'by_view' %}
-              По популярности
-              {% endif %}
-              {% endif %}
-
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><button class="dropdown-item">По дате добавления</button></li>
-              <li><button class="dropdown-item" type="submit" name="sort" value="by_title">По названию</button></li>
-              <li><button class="dropdown-item" type="submit" name="sort" value="by_likes">По количеству лайков</button>
-              </li>
-              <li><button class="dropdown-item" type="submit" name="sort" value="by_view">По популярности</button></li>
-            </ul>
-          </div>
-
-        </form>
-      </div>
-
-      <!-- Конец кнопки -->
-      <!-- Строка поиска -->
-
-      <form class="search" action="" method="GET" id="search_form">
-        <div class="input-group mb-3">
-
-          <input type="text" class="form-control" placeholder="Поиск" aria-label="Username"
-            aria-describedby="basic-addon1" name="query" id="input_search" value="{{ query }}">
-          <button class="input-group-text" id="basic-addon1" type="submit">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor" class="bi bi-search"
-              viewBox="0 0 16 16">
+  <div class="toolsSearch">
+    <!-- Тулзы для поиска -->
+    <div class="tools">
+      <!-- Кнопка с выпадающим меню-->
+      <form action="" method="GET">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-filter"
+                 viewBox="0 0 16 16">
               <path
-                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                      d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
             </svg>
-          </button>
+            {% if not sort_name %}
+            По дате добавления
+            {% else %}
+            {% if sort_name == 'by_title' %}
+            По названию
+            {% endif %}
+            {% if sort_name == 'by_likes' %}
+            По количеству лайков
+            {% endif %}
+            {% if sort_name == 'by_view' %}
+            По популярности
+            {% endif %}
+            {% endif %}
 
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><button class="dropdown-item">По дате добавления</button></li>
+            <li><button class="dropdown-item" type="submit" name="sort" value="by_title">По названию</button></li>
+            <li><button class="dropdown-item" type="submit" name="sort" value="by_likes">По количеству лайков</button>
+            </li>
+            <li><button class="dropdown-item" type="submit" name="sort" value="by_view">По популярности</button></li>
+          </ul>
         </div>
 
       </form>
-
-      <!-- Конец строки поиска -->
     </div>
-    <div class="containerTags">
-      <!-- Grid сетка-->
-      <!-- div одного элемента
-        Типа так получается что есть контейнер "row" и сколько в нем "col" столько будет колонок -->
 
-      {% for i in mems %}
-      <div class="col">
-        <!-- Это карточка -->
-        <div class="card" style="width: 18rem;">
-          <img class="card-img-top" src="{{ i.link }}" alt="Card image cap">
-          <div class="card-body">
-            {% if i.name %}
-            <h5 class="card-title">{{ i.name }}</h5>
-            {% endif %}
+    <!-- Конец кнопки -->
+    <!-- Строка поиска -->
 
-            {% if i.description %}
-            <p class="card-text">{{ i.description }}</p><br />
-            {% endif %}
-            <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Open</a>
-            <button type="button" id="btn_delete_{{ i.id }}" class="btn btn-danger">
-              Remove
-            </button><br />
-            <form method="GET" class="tag_list">
-              {% for tag in i.tags %}
-              <button class="tag_view" type="submit" name="query" value="{{ tag.name }}"><strong>{{ tag.name
-                  }}</strong></button>
-              {% endfor %}
-            </form>
-            <div class="view_panel"><span id="mini_like" class="card_likes"><img width="18" height="18"
-                  src="{{ url_for('static', filename='icon/like.svg') }} " /> {{ i.likes }}</span> <span
-                class="card_views"><img width="25" height="25"
-                  src="{{ url_for('static', filename='icon/eye.svg') }} " /> {{ i.view }}</span></div>
-            <script>
+    <form class="search" action="" method="GET" id="search_form">
+      <div class="input-group mb-3">
+
+        <input type="text" class="form-control" placeholder="Поиск" aria-label="Username"
+               aria-describedby="basic-addon1" name="query" id="input_search" value="{{ query }}">
+        <button class="input-group-text" id="basic-addon1" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor" class="bi bi-search"
+               viewBox="0 0 16 16">
+            <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+          </svg>
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Конец строки поиска -->
+  </div>
+  <div class="containerTags">
+    <!-- Grid сетка-->
+    <!-- div одного элемента
+      Типа так получается что есть контейнер "row" и сколько в нем "col" столько будет колонок -->
+
+    {% for i in mems %}
+    <div class="col">
+      <!-- Это карточка -->
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{{ i.link }}" alt="Card image cap">
+        <div class="card-body">
+          {% if i.name %}
+          <h5 class="card-title">{{ i.name }}</h5>
+          {% endif %}
+
+          {% if i.description %}
+          <p class="card-text">{{ i.description }}</p><br />
+          {% endif %}
+          <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Open</a>
+          <button type="button" id="btn_delete_{{ i.id }}" class="btn btn-danger">
+            Remove
+          </button><br />
+          <form method="GET" class="tag_list">
+            {% for tag in i.tags %}
+            <button class="tag_view" type="submit" name="query" value="{{ tag.name }}">{{ tag.name
+              }}</button>
+            {% endfor %}
+          </form>
+          <div class="view_panel">
+              <span id="mini_like" class="card_likes">
+                <img width="18" height="18" src="{{ url_for('static', filename='icon/like.svg') }} " />
+              {{ i.likes }} </span>
+            <span class="card_date">{{ i.date.strftime('%d.%m.%Y')   }}</span>
+            <span class="card_views"><img width="25" height="25" src="{{ url_for('static', filename='icon/eye.svg') }} " />
+                {{ i.view }} </span>
+          </div>
+          <script>
               btnDelete = document.getElementById('btn_delete_{{ i.id }}')
               function deleteEvent(event) {
                 const formData = new FormData()
@@ -152,25 +156,25 @@ My account
               btnDelete.addEventListener('click', deleteEvent)
 
             </script>
-            <!-- <form method="POST" action="meme/delete" id="delete_form">
-                         <input type="hidden" name="_method" value="DELETE" />
-                         <input type="hidden" name="id" value="{{ i.id }}" />
-                         <button class="btn btn-danger" id="btn_delete" type="submit">Delete</button>
-                    </form> -->
-          </div>
-
-          <!-- Это конец карточки -->
+          <!-- <form method="POST" action="meme/delete" id="delete_form">
+                       <input type="hidden" name="_method" value="DELETE" />
+                       <input type="hidden" name="id" value="{{ i.id }}" />
+                       <button class="btn btn-danger" id="btn_delete" type="submit">Delete</button>
+                  </form> -->
         </div>
+
+        <!-- Это конец карточки -->
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 
-  <script type="text/javascript">
+<script type="text/javascript">
     let buttonStatys = false;
     const passElem = document.querySelector(".addMem")
     const memFile = document.querySelector(".mem_file")
@@ -239,9 +243,9 @@ My account
       handleAvatarImage(event)
     }
   </script>
-  <script src="{{ url_for('static', filename='script/account.js') }}"></script>
-  <script>
-    
+<script src="{{ url_for('static', filename='script/account.js') }}"></script>
+<script>
+
     //Здесь происходит загрузка картинок (событие выполняется один раз если за облостью квадратика розового,
     // Если внутри розового квадратика, то событие выполняется два раза
     // Поэтому если будут какие-то проблемы с загрузкой картинки, пиши мне, я уберу это
@@ -277,7 +281,7 @@ My account
           console.error(error)
         })
     })
-    
+
   </script>
 </body>
 {% endblock %}

@@ -26,6 +26,10 @@ nav {
     image-rendering: crisp-edges;
 }
 
+.tag_list {
+    flex-wrap: wrap;
+}
+
 .profile {
     height: 100px;
     display: flex;
@@ -229,7 +233,6 @@ nav {
 
 .tag_list {
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
 }
 .tag_view {
@@ -237,7 +240,15 @@ nav {
     background-color: initial;
     margin-top: 8px;
     margin-bottom: 8px;
+    padding: 6px;
+    background-color: #f07575;
+    border-radius: 8px;
+    margin-right: 4px;
+}
 
+.tag_view:hover {
+    transform: scale(1.09);
+    background-color: #f55c5c;
 }
 
 .message {

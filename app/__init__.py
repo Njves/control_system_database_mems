@@ -11,11 +11,13 @@ from flask_admin import Admin
 app = Flask(__name__)
 app.config.from_object(Config)
 
-login = LoginManager(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+login = LoginManager(app)
 api_flask = Api(app)
 admin_app = Admin(app, name='Memateka', template_mode='bootstrap3')
 
 
+
 from app import routes, models, api, admin
+

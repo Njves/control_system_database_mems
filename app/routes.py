@@ -1,15 +1,13 @@
 """
 Module contain http routes application
 """
-import werkzeug.exceptions
 from flask import render_template, request, url_for, flash
 from flask_login import login_user, login_required, current_user, logout_user
-from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
 
 from app import app, db
-from app.models import Account, Mem, Tag
+from app.models import Account, Mem
 from app.service import ImageService, Query
 
 
@@ -23,7 +21,6 @@ def index():
     sort_name = request.args.get('sort', default='')
     service = Query()
     memes = service.get_memes(None, query, sort_name)
-
     return render_template('public/public.html', mems=memes, query=query, sort_name=sort_name)
 
 
@@ -44,6 +41,7 @@ def register():
         user_account.set_password(password)
         db.session.add(user_account)
         db.session.commit()
+        login_user(user_account)
         flash("Вы успешно вошли!")
         return redirect(url_for('index'))
     return render_template('register/register.html')

@@ -2,25 +2,18 @@
 Module contain model data processing services
 and interaction with the external environment of the application
 """
-import uuid
 import os
+import uuid
 
 from PIL import Image
-from flask import request
 from sqlalchemy import asc, desc
 from werkzeug.datastructures import FileStorage
 
-from app.models import Tag, Mem
 from app import db
-import itertools
+from app.models import Tag, Mem
 
 
-class Service:
-    def __init__(self):
-        pass
-
-
-class ImageService(Service):
+class ImageService:
     IMG_PATH_DIR = 'app/static/images/'
     IMG_PATH = 'static/images/'
     IMG_AVATAR_PATH_DIR = 'app/static/images/avatars/'
@@ -52,7 +45,7 @@ class ImageService(Service):
         if file.mimetype.split('/')[0] == 'image':
             filename = f"{name.split('-')[0]}.{file.mimetype.split('/')[1]}"
             file.save(dst=self.IMG_AVATAR_PATH_DIR + filename)
-            Compress().convert_picture(self.IMG_AVATAR_PATH_DIR + filename)
+            Compress.convert_picture(self.IMG_AVATAR_PATH_DIR + filename)
             return filename
         return ''
 
@@ -66,8 +59,16 @@ class ImageService(Service):
         except FileNotFoundError:
             print("Файла не существует")
 
+    @staticmethod
+    def avatar_is_exist(link):
+        files = os.listdir(ImageService.IMG_AVATAR_PATH_DIR)
+        for filename in files:
+            if link.split('/')[-1] == filename.split('/')[-1]:
+                return True
+        return False
 
-class TagService(Service):
+
+class TagService:
     """
     Tag service need to processing with tag
     """
@@ -96,7 +97,7 @@ class TagService(Service):
         return tag
 
 
-class Compress(Service):
+class Compress:
     ref_size = 300, 300
 
     def compress(self, link: str):
@@ -112,18 +113,19 @@ class Compress(Service):
 
     @staticmethod
     def convert_picture(link: str):
+        ref_size = 150
         image = Image.open(link)
         width, height = image.size
         if width > height:
-            proportion = height / width
-            image.resize((100, int(height * proportion)), Image.ANTIALIAS)
+            new_height = (height * ref_size) // width
+            image = image.resize((ref_size, new_height), Image.ANTIALIAS)
         else:
-            proportion = width / height
-            image.resize((int(width * proportion), 100), Image.ANTIALIAS)
+            new_width = (width * ref_size) // height
+            image = image.resize((new_width, ref_size), Image.ANTIALIAS)
         image.save(link)
 
 
-class Query(Service):
+class Query:
     def get_memes(self, current_id, query, sort_name):
         if current_id:
             memes_query = Mem.query.filter_by(owner_id=current_id).order_by(Mem.date.asc())

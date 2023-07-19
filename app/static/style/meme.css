@@ -31,8 +31,9 @@ form {
 }
 
 .toggleBox{
-    display: inline-block;
+    display: flex;
     font-weight: bold;
+    align-items: center;
 }
 
 input[type="checkbox"]{

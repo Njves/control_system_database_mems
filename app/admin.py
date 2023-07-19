@@ -23,13 +23,14 @@ admin_app.add_view(ModelView(Role, db.session))
 #                 h=admin_helpers,
 #                 get_url=url_for)
 
-def find_link(filename):
-    mems = Mem.query.all()
-    for i in mems:
-        if mems.link.split('/')[-1] == filename:
-            return True
-    return False
 
+def find_link(filename):
+    if Mem:
+        mems = Mem.query.all()
+        for mem in mems:
+            if mem.link.split('/')[-1] == filename:
+                return True
+    return False
 
 
 def remove_unnecessary_images():
