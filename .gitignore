@@ -29,4 +29,3 @@ htmlcov/
 /app/static/images/
 /app/static/images/avatars/
 migrations
-config.py
