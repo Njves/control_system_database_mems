@@ -4,6 +4,7 @@ and interaction with the external environment of the application
 """
 import os
 import uuid
+from typing import List
 
 from PIL import Image
 from sqlalchemy import asc, desc
@@ -72,7 +73,7 @@ class TagService:
     Tag service need to processing with tag
     """
 
-    def parse_tag(self, tags_dict: list) -> list[Tag]:
+    def parse_tag(self, tags_dict: list) -> List[Tag]:
         """
         example raw_str: cats, woman, anime
         result: [cats, woman, anime]
