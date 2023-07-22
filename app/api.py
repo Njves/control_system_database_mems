@@ -25,6 +25,7 @@ class UploadImage(Resource):
     Response data:
         mem_id: int
     """
+
     def post(self):
         service = ImageService()
         parser = reqparse.RequestParser()
@@ -93,7 +94,8 @@ class MemeApi(Resource):
         params = parser.parse_args()
 
         account = Account.query.filter_by(uid=params['owner_id']).first()
-        mem = Mem(name=params['name'], link=params['link'], description=params['description'], likes=0, status=params['status'], owner=account)
+        mem = Mem(name=params['name'], link=params['link'], description=params['description'], likes=0,
+                  status=params['status'], owner=account)
         db.session.add(mem)
         db.session.commit()
 
@@ -177,6 +179,11 @@ class MemeApi(Resource):
         mem.likes += like
         db.session.add(mem)
         db.session.commit()
+
+
+class LikeApi(Resource):
+    def get(self, mem_id=0):
+        return Mem.query.filter_by(uid=mem_id).first()
 
 
 class AvatarApi(Resource):

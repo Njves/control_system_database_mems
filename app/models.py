@@ -7,7 +7,6 @@ from flask_login import UserMixin
 
 @login.user_loader
 def load_user(id):
-    print(id)
     return Account.query.get(int(id))
 
 
@@ -29,10 +28,11 @@ class Account(UserMixin, db.Model):
     email = db.Column(db.String(128), nullable=False, default="")
     password_hash = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow, comment='date of registation')
-    picture = db.Column(db.String(128), default='images/avatars/avatar_placeholder.png', comment='link to avatar')
+    avatar = db.Column(db.String(128), default='icon/avatar_placeholder.png', comment='link to avatar')
     amount = db.Column(db.Integer, default=0, comment='amount loaded mems')
-    mems = db.relationship('Mem', backref='owner', lazy='dynamic')
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow, comment='last seen user in online')
     uid = db.Column(db.String(128), nullable=False, default=str(uuid.uuid4()), comment="unique user id")
+    mems = db.relationship('Mem', backref='owner', lazy='dynamic')
     roles = db.relationship('Role', secondary=roles_account,
                             backref=db.backref('accounts', lazy='dynamic'))
 

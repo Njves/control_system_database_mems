@@ -23,25 +23,3 @@ admin_app.add_view(ModelView(Role, db.session))
 #                 h=admin_helpers,
 #                 get_url=url_for)
 
-
-def find_link(filename):
-    if Mem:
-        mems = Mem.query.all()
-        for mem in mems:
-            if mem.link.split('/')[-1] == filename:
-                return True
-    return False
-
-
-def remove_unnecessary_images():
-    files = os.listdir(ImageService.IMG_PATH_DIR)
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    try:
-        for filename in files:
-            if not find_link(filename) and not os.path.isdir(ImageService.IMG_PATH_DIR + filename):
-                os.remove(os.path.join(basedir, ImageService.IMG_PATH + filename))
-    except FileNotFoundError:
-        print("Файла не существует")
-
-
-remove_unnecessary_images()

@@ -26,7 +26,6 @@ class ImageService:
         FileStorage it's flask wrapper over http files
         """
         name = str(uuid.uuid4())
-        # checks mime-type if it's image, save else return blank string
         if file.mimetype.split('/')[0] == 'image':
             filename = f"{name.split('-')[0]}.{file.mimetype.split('/')[1]}"
             file.save(dst=self.IMG_PATH_DIR + filename)

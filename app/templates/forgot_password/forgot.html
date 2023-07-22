@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block nav_title %}
+Forgot password
+{% endblock %}
+
+{% block content %}
+<link href="{{ url_for('static', filename='style/signIn.css', v=1) }}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+<div class="container">
+    <form action="" method="post">
+        <div class="form-group">
+            <p class="text-center">Forgot password?</p>
+            <p class="text-center">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Well done!</h4>
+                <p>We have sent an email to restore your password to your email {{ message }} check your email</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            </p>
+        </div>
+        <div class="form-group">
+            <p for="email" class="text-start">Enter your email address
+            </p>
+            <input type="text" class="form-control" id="email" name="recovery_email" required="required">
+        </div>
+        <div class="button-wrapper">
+            <button class="btn btn-success" type="submit">Send</button>
+        </div>
+    </form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+{% endblock %}

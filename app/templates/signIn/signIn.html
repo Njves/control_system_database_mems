@@ -26,7 +26,7 @@ Login
             <p for="Password" class="text-start">Password</p>
             <input type="password" class="form-control" id="Password" name="password" required="required" maxlength="32">
             <div>
-                <a href="#">Forgot password?</a>
+                <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
                 <div class="button-wrapper">
                     <button class="btn btn-success" type="submit">Sign in</button>
 

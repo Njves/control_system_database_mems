@@ -67,9 +67,14 @@ nav {
     box-sizing: border-box;
 }
 
+
 .containerTags {
     display: flex;
     flex-wrap: wrap;
+}
+
+.card {
+    margin-right: 5%;
 }
 
 .col {
@@ -81,7 +86,6 @@ nav {
 
 .card-img-top {
     height: 286px;
-    object-fit: cover;
 }
 
 #plus {
