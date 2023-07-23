@@ -114,14 +114,9 @@ a.logout:hover{
 
 
 @media (max-width: 992px) {
-    #login  {
-        display: none;
-    }
-
     .child_profile_avatar {
         display: none;
     }
-
     #right_logout{
         display: none;
     }

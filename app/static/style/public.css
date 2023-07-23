@@ -89,12 +89,6 @@
     }
 }
 
-@media (max-width: 992px) {
-    #login  {
-        display: none;
-    }
-}
-
 @media (max-width: 420px) {
     .toolsSearch  {
         align-items: center;
