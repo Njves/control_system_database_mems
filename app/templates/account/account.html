@@ -29,7 +29,7 @@ My account
         <div class="information">
             <p class="name">{{ current_user.username }}</p>
             <p class="added">Pictures added {{ current_user.amount }}</p>
-            <p class="last_seen">Last seen {{ current_user.last_seen.strftime('%H:%M %d.%m.%Y') }}</p>
+            <p class="last_seen">Last seen {{ moment(current_user.last_seen).format('LLL') }}</p>
         </div>
     </div>
 

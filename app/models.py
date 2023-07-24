@@ -3,6 +3,7 @@ from datetime import datetime
 from time import time
 
 import jwt
+from sqlalchemy import CheckConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login, app
 from flask_login import UserMixin
@@ -26,13 +27,14 @@ roles_account = db.Table(
 
 
 class Account(UserMixin, db.Model):
+    __table_args__ = (CheckConstraint('amount >= 0', name='positive_check_amount'), )
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), nullable=False, default="")
     password_hash = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow, comment='date of registation')
     avatar = db.Column(db.String(128), default='icon/avatar_placeholder.png', comment='link to avatar')
-    amount = db.Column(db.Integer, default=0, comment='amount loaded mems')
+    amount = db.Column(db.Integer, default=0, comment='amount loaded mems', )
     last_seen = db.Column(db.DateTime, default=datetime.utcnow, comment='last seen user in online')
     uid = db.Column(db.String(128), nullable=False, default=str(uuid.uuid4()), comment="unique user id")
     mems = db.relationship('Mem', backref='owner', lazy='dynamic')

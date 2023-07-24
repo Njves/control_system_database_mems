@@ -26,15 +26,15 @@ Login
             <p for="Password" class="text-start">Password</p>
             <input type="password" class="form-control" id="Password" name="password" required="required" maxlength="32">
             <div>
-                <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+                <a href="{{ url_for('auth.forgot_password') }}">Forgot password?</a>
                 <div class="button-wrapper">
                     <button class="btn btn-success" type="submit">Sign in</button>
 
                 </div>
-                <a href="{{ url_for('register') }}">Create an account</a>
+                <a href="{{ url_for('auth.register') }}">Create an account</a>
             </div>
         </div>
-    </form>
+    </form>i
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

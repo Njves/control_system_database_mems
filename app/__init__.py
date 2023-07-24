@@ -3,6 +3,7 @@ from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
 import os
 from flask import Flask
+from flask_babel import Babel
 
 from flask_login import LoginManager
 from flask_restful import Api, Resource
@@ -11,7 +12,10 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_admin import Admin
+from flask_moment import Moment
 from flask_mail import Mail
+from flask import request
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -20,9 +24,20 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 api_flask = Api(app)
-mail = Mail()
+mail = Mail(app)
 mail.init_app(app)
+moment = Moment(app)
+babel = Babel(app)
 admin_app = Admin(app, name='Memateka', template_mode='bootstrap3')
+
+from app.auth import bp as auth_bp
+
+app.register_blueprint(auth_bp, url_prefix='/auth')
+
+from app.account import bp as account_bp
+
+app.register_blueprint(account_bp)
+
 
 if not app.debug:
     if app.config['MAIL_SERVER']:
@@ -53,5 +68,5 @@ if not app.debug:
     app.logger.info('Memateka startup')
 
 
-from app import routes, models, api, admin, email
+from app import models, api, admin, routes
 
