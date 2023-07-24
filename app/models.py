@@ -1,7 +1,10 @@
 import uuid
 from datetime import datetime
+from time import time
+
+import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login
+from app import db, login, app
 from flask_login import UserMixin
 
 
@@ -38,7 +41,7 @@ class Account(UserMixin, db.Model):
 
     def __eq__(self, other):
         return self.id == other.id and self.username == other.username and self.email == other.email and \
-               self.date == other.date and self.picture == other.picture and self.amount == other.amount and \
+               self.date == other.date and self.avatar == other.picture and self.amount == other.amount and \
                self.uid == other.uid
 
     def set_password(self, password):
@@ -47,10 +50,25 @@ class Account(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            account = Account.query.get(jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password'])
+            print(account)
+            return account
+        except jwt.InvalidTokenError:
+            # TODO: Добавить логирование
+            return
     def __repr__(self):
         return f"Account: ('username': {self.username})," \
                f" ('date': {self.date})," \
-               f" ('picture': {self.picture})," \
+               f" ('picture': {self.avatar})," \
                f" ('amount': {self.amount}),"
 
 

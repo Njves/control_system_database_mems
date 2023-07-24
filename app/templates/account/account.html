@@ -24,7 +24,7 @@ My account
 </form>
 <div class="contain">
     <div class="profile">
-        <a id="avatar_area"><img src="{{ url_for('static', filename=current_user.picture)  }}" id='avatar'/></a>
+        <a id="avatar_area"><img src="{{ url_for('static', filename=current_user.avatar)  }}" id='avatar'/></a>
         <input type="file" accept=".jpg, .jpeg, .png" id="avatar_file" name="picture" hidden>
         <div class="information">
             <p class="name">{{ current_user.username }}</p>

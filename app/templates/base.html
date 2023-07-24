@@ -53,7 +53,7 @@
                 <a class="logout" href="{{ url_for('logout') }}" >Logout</a>
             </div>
             <a href="{{ url_for('account') }}" class="nav_username">{{ current_user.username }}</a>
-            <a href="{{ url_for('account') }}"><img src="{{url_for('static', filename='images/avatars/avatar_placeholder.png')}}" id='avatar' class="child_profile_avatar" /> </a>
+            <a href="{{ url_for('account') }}"><img src="{{url_for('static', filename=current_user.avatar)}}" id='avatar' class="child_profile_avatar" /> </a>
 
             {% else %}
 
@@ -71,15 +71,7 @@
         </nav>
     </header>
     <div id="snackbar">Some text some message..</div>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
+
     {% block content %}
 
     {% endblock %}

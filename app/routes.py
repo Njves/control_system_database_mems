@@ -7,10 +7,11 @@ from flask import render_template, request, url_for, flash
 from flask_login import login_user, login_required, current_user, logout_user
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import redirect
-
 from app import app, db
 from app.models import Account, Mem
 from app.service import ImageService, Query
+from app.email import send_password_reset_email
+
 
 @app.before_request
 def before_request():
@@ -34,16 +35,41 @@ def index():
 @app.route('/forgot_password', methods=['POST', 'GET'])
 def forgot_password():
     if request.form:
+        recovered_account = Account.query.filter_by(email=request.form['recovery_email']).first()
         flash(request.form['recovery_email'])
-
-        return redirect(url_for('forgot_password'))
+        if not recovered_account:
+            return redirect(url_for('forgot_password'))
+        send_password_reset_email(recovered_account)
+        return render_template('forgot_password/forgot.html', email=request.form['recovery_email'])
     return render_template('forgot_password/forgot.html')
+
+@app.route('/reset_password/<token>', methods=['POST', 'GET'])
+def reset_password(token: str):
+    account: Account = Account.verify_reset_password_token(token)
+    if not account:
+        return redirect(url_for('index'))
+    if request.form:
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+        if not account:
+            return redirect(url_for('index'))
+        if not request.form['new_password']:
+            flash('Password must contain at least 6 characters')
+            return redirect(url_for('reset_password', token=token))
+        if not 6 <= len(request.form['new_password']) <= 32:
+            flash('The password does not meet the conditions')
+            return redirect(url_for('reset_password', token=token))
+        form = request.form
+        account.set_password(form['new_password'])
+        db.session.commit()
+        flash('Пароль успешно изменен')
+        return redirect(url_for('login'))
+    return render_template('forgot_password/reset_password.html')
 
 
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-
     form = request.form
     # if client send something - checks data
     if len(form) > 0:
@@ -55,6 +81,9 @@ def register():
             flash('Пароли не совпадают')
             return redirect(url_for('register'))
         user_account = Account(username=username, email=email)
+        if Account.query.filter_by(username=user_account.username).first():
+            flash('Такой пользователь уже существует')
+            return redirect(url_for('register'))
         user_account.set_password(password)
         db.session.add(user_account)
         db.session.commit()

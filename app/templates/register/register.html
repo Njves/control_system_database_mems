@@ -12,6 +12,15 @@ Register
 
 <div class="container">
     <form method="post" action="/register">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         <div class="form-group">
             <p class="text-center">Register in CSDM</p>
         </div>
@@ -33,7 +42,6 @@ Register
             <input type="password" class="form-control" name="password_repeat" id="password-repeat" required="required" minlength="6" maxlength="32">
             <span class="form__error_last">* This field must contain at least 6 and no more than 32 characters.</span>
             <div>
-                <a href="#">Forgot password?</a>
                 <div class="button-wrapper">
                     <button class="btn btn-success" name="submit">Register</button>
                 </div>

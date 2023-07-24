@@ -21,6 +21,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 api_flask = Api(app)
 mail = Mail()
+mail.init_app(app)
 admin_app = Admin(app, name='Memateka', template_mode='bootstrap3')
 
 if not app.debug:

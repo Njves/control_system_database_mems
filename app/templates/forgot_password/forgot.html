@@ -16,10 +16,18 @@ Forgot password
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 {% for message in messages %}
+                {% if email %}
             <div class="alert alert-success" role="alert">
                 <h4 class="alert-heading">Well done!</h4>
                 <p>We have sent an email to restore your password to your email {{ message }} check your email</p>
             </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Failed to recover password!</h4>
+                <span>Couldn't find email {{ message }}</span>
+            </div>
+            {% endif %}
+
             {% endfor %}
             {% endif %}
             {% endwith %}
