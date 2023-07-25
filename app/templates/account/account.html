@@ -107,7 +107,7 @@ My account
                     {% if i.description %}
                     <p class="card-text">{{ i.description }}</p><br />
                     {% endif %}
-                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary">Open</a>
+                    <a href="{{ url_for('mem.mem', meme_id=i.id) }}" class="btn btn-primary">Open</a>
                     <button type="button" id="btn_delete_{{ i.id }}" class="btn btn-danger">
                         Remove
                     </button><br />

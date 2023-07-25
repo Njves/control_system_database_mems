@@ -84,7 +84,7 @@ Community
                     {% if i.description %}
                     <p class="card-text">{{ i.description }}</p>
                     {% endif %}
-                    <a href="{{ url_for('mem', meme_id=i.id) }}" class="btn btn-primary"
+                    <a href="{{ url_for('mem.mem', meme_id=i.id) }}" class="btn btn-primary"
                         id="card_action_open">Open</a><br />
                     <form method="GET" class="tag_list">
                         {% for tag in i.tags %}
@@ -96,7 +96,7 @@ Community
                         <span class="card_likes"><img width="18" height="18"
                                 src="{{ url_for('static', filename='icon/like.svg') }} " /> {{ i.likes }}</span>
                         <div style="display: inline;"><img
-                                src="{{ url_for('static', filename='images/avatars/avatar_placeholder.png') }}"
+                                src="{{ url_for('static', filename=i.owner.avatar) }}"
                                 height="30" width="30" /> <span>{{ i.owner.username }}</span></div>
                         <span class="card_views"><img width="25" height="25"
                                 src="{{ url_for('static', filename='icon/eye.svg') }} " /> {{ i.view }}</span>

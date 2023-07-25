@@ -1,8 +1,8 @@
 from typing import List
 
-from flask import render_template
+from flask import render_template, current_app as app
 from flask_mail import Message
-from app import mail, app
+from app import mail
 from app.models import Account
 from threading import Thread
 

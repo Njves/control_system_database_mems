@@ -5,7 +5,8 @@ from time import time
 import jwt
 from sqlalchemy import CheckConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login, app
+from app import db, login
+from flask import current_app as app
 from flask_login import UserMixin
 
 
@@ -43,7 +44,7 @@ class Account(UserMixin, db.Model):
 
     def __eq__(self, other):
         return self.id == other.id and self.username == other.username and self.email == other.email and \
-               self.date == other.date and self.avatar == other.picture and self.amount == other.amount and \
+               self.date == other.date and self.avatar == other.avatar and self.amount == other.amount and \
                self.uid == other.uid
 
     def set_password(self, password):

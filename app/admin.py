@@ -5,7 +5,7 @@ from app.models import Mem, Tag, Account, Role
 
 
 admin_app.add_view(ModelView(Account, db.session, endpoint='accounts'))
-admin_app.add_view(ModelView(Mem, db.session))
+admin_app.add_view(ModelView(Mem, db.session, endpoint='mems'))
 admin_app.add_view(ModelView(Tag, db.session))
 admin_app.add_view(ModelView(Role, db.session))
 

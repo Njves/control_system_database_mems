@@ -21,17 +21,17 @@
         <!--Меню навигации то что navbar-dark bg-dark это стиль темный-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url_for('index') }}">{% block nav_title %} {% endblock %}</a>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">{% block nav_title %} {% endblock %}</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                            <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="my_account_btn" href="{{ url_for('account') }}">My account</a>
+                            <a class="nav-link" id="my_account_btn" href="{{ url_for('account.account') }}">My account</a>
                         </li>
                         {% if current_user.is_authenticated %}
                         <li class="nav-item">
@@ -52,8 +52,8 @@
                 <img class="logout_img" src="{{ url_for('static', filename='icon/logout_icon_2.png') }}" width="32" height="32" align="left"/>
                 <a class="logout" href="{{ url_for('auth.logout') }}" >Logout</a>
             </div>
-            <a href="{{ url_for('account') }}" class="nav_username">{{ current_user.username }}</a>
-            <a href="{{ url_for('account') }}"><img src="{{url_for('static', filename=current_user.avatar)}}" id='avatar' class="child_profile_avatar" /> </a>
+            <a href="{{ url_for('account.account') }}" class="nav_username">{{ current_user.username }}</a>
+            <a href="{{ url_for('account.account') }}"><img src="{{url_for('static', filename=current_user.avatar)}}" id='avatar' class="child_profile_avatar" /> </a>
 
             {% else %}
 

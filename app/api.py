@@ -1,17 +1,17 @@
 """
 The module contains api layer methods
 """
+import json
 import uuid
-from copy import deepcopy, copy
+from copy import copy
 
 import werkzeug
 from flask import jsonify, Response
 from flask_restful import Resource, reqparse
-from random import randint
+
 from app import api_flask, db
 from app.models import Mem, Account
-from app.service import ImageService, TagService, Compress
-import json
+from app.service import ImageService, TagService
 
 
 class UploadImage(Resource):

@@ -1,11 +1,11 @@
 from flask import render_template, request
 from flask_login import login_required, current_user
 
-from app import app
+from app.account import bp
 from app.service import Query
 
 
-@app.route('/account', methods=['POST', 'GET'])
+@bp.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
     query = request.args.get('query', default='')
