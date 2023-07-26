@@ -3,6 +3,7 @@ import os
 from logging.handlers import RotatingFileHandler
 from logging.handlers import SMTPHandler
 
+from elasticsearch import Elasticsearch
 from flask import Flask
 from flask_admin import Admin
 from flask_login import LoginManager
@@ -26,7 +27,7 @@ api_flask = Api()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
@@ -34,6 +35,8 @@ def create_app(config_class=Config):
     mail.init_app(app)
     moment.init_app(app)
     admin_app.init_app(app)
+    app.elasticsearch = Elasticsearch([app.config['ES_ENDPOINT']]) if app.config['ES_ENDPOINT'] else None
+
     from app.auth import bp as auth_bp
 
     app.register_blueprint(auth_bp, url_prefix='/auth')

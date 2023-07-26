@@ -49,7 +49,6 @@
             {% if current_user.is_authenticated %}
 
             <div class="logout_block" id="right_logout">
-                <img class="logout_img" src="{{ url_for('static', filename='icon/logout_icon_2.png') }}" width="32" height="32" align="left"/>
                 <a class="logout" href="{{ url_for('auth.logout') }}" >Logout</a>
             </div>
             <a href="{{ url_for('account.account') }}" class="nav_username">{{ current_user.username }}</a>
@@ -60,9 +59,6 @@
             <a href="{{ url_for('auth.login') }}"><button class="btn btn-outline-success my-2 my-sm-0" id="login">Войти</button></a>
             <style>
                 #my_account_btn {
-                    display: none;
-                }
-                #logout_btn {
                     display: none;
                 }
             </style>

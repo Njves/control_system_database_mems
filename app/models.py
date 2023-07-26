@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 from flask import current_app as app
 from flask_login import UserMixin
-
+from app.search import add_to_index, remove_from_index, query_index
 
 @login.user_loader
 def load_user(id):
@@ -26,6 +26,50 @@ roles_account = db.Table(
     db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
 )
 
+class SearchableMixin(object):
+    @classmethod
+    def search(cls, expression):
+        ids, total = query_index(cls.__tablename__, expression)
+        print(total)
+        if total['value'] == 0:
+            return cls.query.filter_by(id=0), 0
+        when = []
+        for i in range(len(ids)):
+            when.append((ids[i], i))
+        return cls.query.filter(cls.id.in_(ids)).order_by(
+            db.case(when, value=cls.id)), total
+
+    @classmethod
+    def before_commit(cls, session):
+        session._changes = {
+            'add': list(session.new),
+            'update': list(session.dirty),
+            'delete': list(session.deleted)
+        }
+
+    @classmethod
+    def after_commit(cls, session):
+        for obj in session._changes['add']:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__, obj)
+        for obj in session._changes['update']:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__, obj)
+        for obj in session._changes['delete']:
+            if isinstance(obj, SearchableMixin):
+                remove_from_index(obj.__tablename__, obj)
+        session._changes = None
+
+    @classmethod
+    def reindex(cls):
+        for obj in cls.query:
+            add_to_index(cls.__tablename__, obj)
+
+
+db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+
+
 
 class Account(UserMixin, db.Model):
     __table_args__ = (CheckConstraint('amount >= 0', name='positive_check_amount'), )
@@ -35,17 +79,22 @@ class Account(UserMixin, db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow, comment='date of registation')
     avatar = db.Column(db.String(128), default='icon/avatar_placeholder.png', comment='link to avatar')
-    amount = db.Column(db.Integer, default=0, comment='amount loaded mems', )
     last_seen = db.Column(db.DateTime, default=datetime.utcnow, comment='last seen user in online')
     uid = db.Column(db.String(128), nullable=False, default=str(uuid.uuid4()), comment="unique user id")
     mems = db.relationship('Mem', backref='owner', lazy='dynamic')
     roles = db.relationship('Role', secondary=roles_account,
                             backref=db.backref('accounts', lazy='dynamic'))
 
+    __searchable__ = ['username']
+
+    @property
+    def amount(self):
+        return self.mems.count()
+
     def __eq__(self, other):
         return self.id == other.id and self.username == other.username and self.email == other.email and \
-               self.date == other.date and self.avatar == other.avatar and self.amount == other.amount and \
-               self.uid == other.uid
+            self.date == other.date and self.avatar == other.avatar and self.amount == other.amount and \
+            self.uid == other.uid
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -62,7 +111,7 @@ class Account(UserMixin, db.Model):
     def verify_reset_password_token(token):
         try:
             account = Account.query.get(jwt.decode(token, app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['reset_password'])
+                                                   algorithms=['HS256'])['reset_password'])
             print(account)
             return account
         except jwt.InvalidTokenError:
@@ -75,7 +124,10 @@ class Account(UserMixin, db.Model):
                f" ('amount': {self.amount}),"
 
 
-class Mem(db.Model):
+class Mem(SearchableMixin, db.Model):
+
+    __searchable__ = ['name', 'description']
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     link = db.Column(db.String(128), nullable=False, comment='Path mem image')
@@ -88,10 +140,12 @@ class Mem(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('account.id'))
     tags = db.relationship('Tag', secondary=mem_tag, backref=db.backref('mems'))
 
+
+
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.link == other.link and self.date == other.date and \
-               self.description == other.description and self.likes == other.likes and self.status == other.status and self.uid == other.uid and \
-               self.owner_id == other.owner_id and self.tags == other.tags
+            self.description == other.description and self.likes == other.likes and self.status == other.status and self.uid == other.uid and \
+            self.owner_id == other.owner_id and self.tags == other.tags
 
     def __repr__(self):
         return f"Mem: ('id': {self.id})," \
@@ -112,11 +166,16 @@ class Tag(db.Model):
     date = db.Column(db.DateTime, default=datetime.utcnow)
     uid = db.Column(db.String(128), comment='unique id')
 
+    __searchable__ = ['name']
+
     def __repr__(self):
         return f"Tag: ('id': {self.id})," \
                f" ('name': {self.name})," \
                f" ('date': {self.date})," \
                f" ('uid': {self.uid}),"
+
+
+
 
 
 class Role(db.Model):
@@ -126,3 +185,4 @@ class Role(db.Model):
 
     def __str__(self):
         return self.name
+

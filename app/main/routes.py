@@ -8,6 +8,7 @@ from flask_login import current_user
 
 from app import db
 from app.main import bp
+from app.models import Account, Mem
 from app.service import Query
 
 
@@ -18,7 +19,6 @@ def before_request():
         db.session.commit()
 
 @bp.route('/', methods=['POST', 'GET'])
-@bp.route('/index', methods=['POST', 'GET'])
 def index():
     """
     Main page
@@ -26,6 +26,9 @@ def index():
     # get only public memes
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
-    service = Query()
-    memes = service.get_memes(None, query, sort_name)
+    memes = Mem.query.all()
+    if query:
+        memes, total = Mem.search(query)
+        memes = memes.all()
+
     return render_template('public/public.html', mems=memes, query=query, sort_name=sort_name)

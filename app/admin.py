@@ -1,8 +1,11 @@
 from flask_admin.contrib.sqla import ModelView
 
-from app import admin_app, db
+from app import admin_app, db, login
 from app.models import Mem, Tag, Account, Role
 
+class SecurityModelView(ModelView):
+    def is_accessible(self):
+        return login.current_user.roles
 
 admin_app.add_view(ModelView(Account, db.session, endpoint='accounts'))
 admin_app.add_view(ModelView(Mem, db.session, endpoint='mems'))

@@ -1,6 +1,9 @@
 import os
-basedir = os.path.abspath(os.path.dirname(__file__))
+import pathlib
+from dotenv import load_dotenv
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(pathlib.Path('csdmenv.env'))
 
 class Config(object):
     sqlite = 'sqlite:///' + os.path.join(basedir, 'app.db')
@@ -13,3 +16,4 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['mrpostik@gmail.com']
+    ES_ENDPOINT = os.environ.get('ES_ENDPOINT')

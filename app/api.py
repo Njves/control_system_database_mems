@@ -34,13 +34,9 @@ class UploadImage(Resource):
         params = parser.parse_args()
 
         image_file = params['image']
-        print(image_file)
         filename = service.save(image_file)
         lnk = ImageService.IMG_PATH + filename
-        print(params)
         account = Account.query.filter_by(uid=params['owner_id']).first()
-        print(account)
-        account.amount += 1
         meme = Mem(name="", link=lnk, description="", status=0, uid=str(uuid.uuid4()), owner=account)
         db.session.add(meme)
         db.session.add(account)
@@ -121,13 +117,10 @@ class MemeApi(Resource):
             if account.uid != params['owner_id']:
                 return Response("{}", status=403)
 
-        account.amount -= 1
         mem_query = Mem.query.filter_by(id=id)
         mem = mem_query.first()
         tags = copy(mem.tags)
-        print(tags)
         for tag in tags:
-            print(tag)
             mem.tags.remove(tag)
             db.session.commit()
 
