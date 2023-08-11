@@ -36,10 +36,10 @@ class ImageService:
 
     def save_avatar(self, file: FileStorage):
         """
-                The method saves image to file system
-                Save path app/static/images/
-                FileStorage it's flask wrapper over http files
-                """
+        The method saves image to file system
+        Save path app/static/images/
+        FileStorage it's flask wrapper over http files
+        """
         name = str(uuid.uuid4())
         # checks mime-type if it's image, save else return blank string
         if file.mimetype.split('/')[0] == 'image':
@@ -100,6 +100,20 @@ class TagService:
 class Compress:
     ref_size = 300, 300
 
+    # def compress(self, link: str):
+    #     """
+    #     Функция принимающая на вход ширину и высоту и ссылку
+    #     картинки которую нужно сжать
+    #     """
+    #     image = Image.open(link)
+    #     width, height = image.size
+    #     ratio = width/height
+    #     if width > 1024 or height > 1024:
+    #         if width > height:
+    #             image = image.resize((1024, int(1024//ratio)), Image.ANTIALIAS)
+    #         else:
+    #             image = image.resize((int(1024*ratio), 1024), Image.ANTIALIAS)
+    #     image.save(link)
     def compress(self, link: str):
         """
         Функция принимающая на вход ширину и высоту и ссылку
@@ -110,7 +124,6 @@ class Compress:
         if width > 1024 or height > 1024:
             image = image.resize((1024, 1024), Image.ANTIALIAS)
         image.save(link)
-
     @staticmethod
     def convert_picture(link: str):
         ref_size = 150
@@ -131,18 +144,10 @@ class Query:
             memes_query = Mem.query.filter_by(owner_id=current_id).order_by(Mem.date.asc())
         else:
             memes_query = Mem.query.filter_by(status=1)
-        all_memes = memes_query.all()
         sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
                         'by_likes': memes_query.order_by(desc(Mem.likes)),
                         'by_view': memes_query.order_by(desc(Mem.view))}
         found_tagged_mem = []
-        if query:
-            memes_query = memes_query.filter(Mem.name.like("%" + query + "%"))
-            for current_mem in all_memes:
-                for tag in current_mem.tags:
-                    print(tag, tag.name.startswith(query))
-                    if tag.name.startswith(query):
-                        found_tagged_mem.append(current_mem)
 
         if sort_name:
             memes_query = sort_various.get(sort_name, '')

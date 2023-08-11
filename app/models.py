@@ -70,9 +70,18 @@ db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('account.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('account.id'))
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f'Message: {self.body} sender {self.sender_id} recipient {self.recipient_id}'
+
 
 class Account(UserMixin, db.Model):
-    __table_args__ = (CheckConstraint('amount >= 0', name='positive_check_amount'), )
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), nullable=False, default="")
@@ -87,14 +96,29 @@ class Account(UserMixin, db.Model):
 
     __searchable__ = ['username']
 
+    messages_sent = db.relationship('Message',
+                                    foreign_keys='Message.sender_id',
+                                    backref='author', lazy='dynamic')
+    messages_received = db.relationship('Message',
+                                        foreign_keys='Message.recipient_id',
+                                        backref='recipient', lazy='dynamic')
+    last_message_read_time = db.Column(db.DateTime)
+
+    def new_messages(self):
+        last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+        return Message.query.filter_by(recipient=self).filter(
+            Message.timestamp > last_read_time).count()
+
     @property
     def amount(self):
         return self.mems.count()
 
     def __eq__(self, other):
-        return self.id == other.id and self.username == other.username and self.email == other.email and \
-            self.date == other.date and self.avatar == other.avatar and self.amount == other.amount and \
-            self.uid == other.uid
+        if isinstance(other, Account):
+            return self.id == other.id and self.username == other.username and self.email == other.email and \
+                self.date == other.date and self.avatar == other.avatar and self.amount == other.amount and \
+                self.uid == other.uid
+        return False
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

@@ -33,6 +33,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="my_account_btn" href="{{ url_for('account.account') }}">My account</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="message_btn" href="{{ url_for('message.messages') }}">Message</a>
+                        </li>
                         {% if current_user.is_authenticated %}
                         <li class="nav-item">
                             <div class="logout_block" align="right" id="left_logout">
@@ -48,11 +51,11 @@
 
             {% if current_user.is_authenticated %}
 
+            <a href="{{ url_for('account.account') }}" class="nav_username">{{ current_user.username }}</a>
+            <a href="{{ url_for('account.account') }}"><img src="{{url_for('static', filename=current_user.avatar)}}" id='avatar' class="child_profile_avatar" /> </a>
             <div class="logout_block" id="right_logout">
                 <a class="logout" href="{{ url_for('auth.logout') }}" >Logout</a>
             </div>
-            <a href="{{ url_for('account.account') }}" class="nav_username">{{ current_user.username }}</a>
-            <a href="{{ url_for('account.account') }}"><img src="{{url_for('static', filename=current_user.avatar)}}" id='avatar' class="child_profile_avatar" /> </a>
 
             {% else %}
 

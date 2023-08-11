@@ -1,0 +1,132 @@
+2023-07-23 23:04:30,320 ERROR: Exception on /meme/2 [GET] [in D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask\app.py:1457]
+Traceback (most recent call last):
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 3250, in _wrap_pool_connect
+    return fn()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 310, in connect
+    return _ConnectionFairy._checkout(self)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 868, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 476, in checkout
+    rec = pool._do_get()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\impl.py", line 145, in _do_get
+    with util.safe_reraise():
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\impl.py", line 143, in _do_get
+    return self._create_connection()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 256, in _create_connection
+    return _ConnectionRecord(self)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 371, in __init__
+    self.__connect()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 665, in __connect
+    with util.safe_reraise():
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 661, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\create.py", line 590, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\default.py", line 597, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "dpg-ciukmn95rnuhcnubbg3g-a" to address: Unknown host
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask_restful\__init__.py", line 271, in error_router
+    return original_handler(e)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask\app.py", line 1514, in full_dispatch_request
+    rv = self.preprocess_request()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask\app.py", line 1857, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+  File "D:\Projects\python\control_system_database_mems\app\routes.py", line 17, in before_request
+    if current_user.is_authenticated:
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\werkzeug\local.py", line 432, in __get__
+    obj = instance._get_current_object()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\werkzeug\local.py", line 554, in _get_current_object
+    return self.__local()  # type: ignore
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask_login\utils.py", line 26, in <lambda>
+    current_user = LocalProxy(lambda: _get_user())
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask_login\utils.py", line 346, in _get_user
+    current_app.login_manager._load_user()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\flask_login\login_manager.py", line 318, in _load_user
+    user = self._user_callback(user_id)
+  File "D:\Projects\python\control_system_database_mems\app\models.py", line 10, in load_user
+    return Account.query.get(int(id))
+  File "<string>", line 2, in get
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\deprecations.py", line 401, in warned
+    return fn(*args, **kwargs)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\query.py", line 943, in get
+    return self._get_impl(ident, loading.load_on_pk_identity)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\query.py", line 947, in _get_impl
+    return self.session._get_impl(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\session.py", line 2892, in _get_impl
+    return db_load_fn(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\loading.py", line 530, in load_on_pk_identity
+    session.execute(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\session.py", line 1691, in execute
+    conn = self._connection_for_bind(bind)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\session.py", line 1532, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\orm\session.py", line 747, in _connection_for_bind
+    conn = bind.connect()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 3204, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 3283, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 3253, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 2100, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\base.py", line 3250, in _wrap_pool_connect
+    return fn()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 310, in connect
+    return _ConnectionFairy._checkout(self)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 868, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 476, in checkout
+    rec = pool._do_get()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\impl.py", line 145, in _do_get
+    with util.safe_reraise():
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\impl.py", line 143, in _do_get
+    return self._create_connection()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 256, in _create_connection
+    return _ConnectionRecord(self)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 371, in __init__
+    self.__connect()
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 665, in __connect
+    with util.safe_reraise():
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\pool\base.py", line 661, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\create.py", line 590, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\sqlalchemy\engine\default.py", line 597, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "D:\Projects\python\control_system_database_mems\venv\lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "dpg-ciukmn95rnuhcnubbg3g-a" to address: Unknown host
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)

@@ -1,7 +1,8 @@
 from flask_admin.contrib.sqla import ModelView
 
 from app import admin_app, db, login
-from app.models import Mem, Tag, Account, Role
+from app.models import Mem, Tag, Account, Role, Message
+
 
 class SecurityModelView(ModelView):
     def is_accessible(self):
@@ -11,6 +12,7 @@ admin_app.add_view(ModelView(Account, db.session, endpoint='accounts'))
 admin_app.add_view(ModelView(Mem, db.session, endpoint='mems'))
 admin_app.add_view(ModelView(Tag, db.session))
 admin_app.add_view(ModelView(Role, db.session))
+admin_app.add_view(ModelView(Message, db.session, endpoint='messages'))
 
 # user_datastore = SQLAlchemyUserDatastore(db, Account, Role)
 # security = Security(app, user_datastore)

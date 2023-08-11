@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Message
+{% endblock %}
+
+{% block nav_title %}
+My message
+{% endblock %}
+
+{% block content %}
+<link href="{{ url_for('static', filename='style/message.css', v=1) }}" rel="stylesheet" />
+<div class="main">
+    <form action="" method="POST" class="p-4 msg-form w-50">
+        <div class="form-group">
+            <label for="textArea" class="">Текст сообщения</label>
+            <textarea style="resize: none; height: 30%;" oninput="autoResize()" class="form-control" id="textArea" name="text" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary mt-2 ml-auto" type="submit">Отправить</button>
+    </form>
+</div>
+<script>
+    function autoResize() {
+        const textarea = document.getElementById("myTextarea");
+        textarea.style.height = "auto"; // Сбрасываем высоту до значения по умолчанию
+        textarea.style.height = `${textarea.scrollHeight}px`; // Устанавливаем новую высоту в зависимости от содержимого
+    }
+</script>
+{% endblock %}

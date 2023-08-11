@@ -19,17 +19,17 @@ def register():
         password_repeat = form['password_repeat']
         if password != password_repeat:
             flash('Пароли не совпадают')
-            return redirect(url_for('register'))
+            return redirect(url_for('auth.register'))
         user_account = Account(username=username, email=email)
         if Account.query.filter_by(username=user_account.username).first():
             flash('Такой пользователь уже существует')
-            return redirect(url_for('register'))
+            return redirect(url_for('auth.register'))
         user_account.set_password(password)
         db.session.add(user_account)
         db.session.commit()
         login_user(user_account)
         flash("Вы успешно вошли!")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     return render_template('auth/register.html')
 
 @bp.route('/login', methods=['POST', 'GET'])
@@ -47,7 +47,7 @@ def login():
             return redirect(url_for("auth.login"))
         login_user(user_account)
         flash("Success!")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     return render_template('auth/signIn.html')
 
 @bp.route('/forgot_password', methods=['POST', 'GET'])
@@ -56,7 +56,7 @@ def forgot_password():
         recovered_account = Account.query.filter_by(email=request.form['recovery_email']).first()
         flash(request.form['recovery_email'])
         if not recovered_account:
-            return redirect(url_for('forgot_password'))
+            return redirect(url_for('auth.forgot_password'))
         send_password_reset_email(recovered_account)
         return render_template('auth/forgot.html', email=request.form['recovery_email'])
     return render_template('auth/forgot.html')
@@ -65,12 +65,12 @@ def forgot_password():
 def reset_password(token: str):
     account: Account = Account.verify_reset_password_token(token)
     if not account:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     if request.form:
         if current_user.is_authenticated:
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
         if not account:
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
         if not request.form['new_password']:
             flash('Password must contain at least 6 characters')
             return redirect(url_for('auth.reset_password', token=token))
@@ -87,4 +87,4 @@ def reset_password(token: str):
 @bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))

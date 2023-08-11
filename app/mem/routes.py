@@ -33,8 +33,8 @@ def mem(meme_id):
     mem.view += 1
     db.session.add(mem)
     db.session.commit()
-    return render_template('meme/meme.html', img=img, mem=mem, mem_tags=mem_tags)
+    return render_template('meme/meme_new.html', img=img, mem=mem, mem_tags=mem_tags)
 
 @bp.route("/redirect")
 def add_new_mem(meme_id):
-    return redirect(url_for('mem', meme_id=meme_id), 301)
+    return redirect(url_for('mem.mem', meme_id=meme_id), 301)

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block nav_title %}
+My message
+{% endblock %}
+{% block title %}
+My message
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% for message in messages %}
+    {% include 'message/message.html' %}
+    {% endfor %}
+</div>
+<a href="{{ url_for('message.send_message', recipient='halcyonika') }}" class="btn btn-primary"  type="button">Send message</a>
+
+
+{% endblock %}

@@ -8,8 +8,7 @@ from flask_login import current_user
 
 from app import db
 from app.main import bp
-from app.models import Account, Mem
-from app.service import Query
+from app.models import Mem
 
 
 @bp.before_request
@@ -26,7 +25,7 @@ def index():
     # get only public memes
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
-    memes = Mem.query.all()
+    memes = Mem.query.filter_by(status=1).all()
     if query:
         memes, total = Mem.search(query)
         memes = memes.all()

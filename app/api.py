@@ -25,7 +25,6 @@ class UploadImage(Resource):
     Response data:
         mem_id: int
     """
-
     def post(self):
         service = ImageService()
         parser = reqparse.RequestParser()
@@ -193,9 +192,7 @@ class AvatarApi(Resource):
         account = Account.query.filter_by(uid=params['id']).first()
 
         image_link = service.save_avatar(params['picture'])
-
-        account.picture = 'images/avatars/' + image_link
-        print(account.picture)
+        account.avatar = 'images/avatars/' + image_link
         db.session.add(account)
         db.session.commit()
         return Response('{}', 201)

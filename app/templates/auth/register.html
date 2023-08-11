@@ -11,7 +11,7 @@ Register
 <link href="{{ url_for('static', filename='style/register.css', v=1) }}" rel="stylesheet" />
 
 <div class="container">
-    <form method="post" action="/register">
+    <form method="post" action="">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <ul class=flashes>

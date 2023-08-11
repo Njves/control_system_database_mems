@@ -1,0 +1,14 @@
+<div class="container-fluid d-flex align-content-center flex-column">
+    <div class="container" style="width: fit-content">
+        <div class="row">
+            <div class="col p-2">
+                <img src="{{ url_for('static', filename=message.recipient.avatar) }}" width="32" /> <span style="font-weight: bold"> {{ message.recipient.username }} </span> {{  moment(message.timestamp).format('LLL') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ message.body }}
+            </div>
+        </div>
+    </div>
+</div>
