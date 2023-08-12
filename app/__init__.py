@@ -25,7 +25,7 @@ moment = Moment()
 admin_app = Admin(name='Memateka', template_mode='bootstrap3')
 api_flask = Api()
 
-def create_app(config_class=Config):
+def create_app(config_class=Config, testing=False):
     app = Flask(__name__)
     app.config.from_object(config_class)
     db.init_app(app)
@@ -35,7 +35,7 @@ def create_app(config_class=Config):
     mail.init_app(app)
     moment.init_app(app)
     admin_app.init_app(app)
-    app.elasticsearch = Elasticsearch([app.config['ES_ENDPOINT']]) if app.config['ES_ENDPOINT'] else None
+    app.elasticsearch = Elasticsearch([app.config.get('ES_ENDPOINT')]) if app.config.get('ES_ENDPOINT') else None
 
     from app.auth import bp as auth_bp
 
@@ -57,7 +57,7 @@ def create_app(config_class=Config):
 
     app.register_blueprint(msg_bp)
 
-    if not app.debug:
+    if not app.debug and testing:
         if app.config['MAIL_SERVER']:
             auth = None
             if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:

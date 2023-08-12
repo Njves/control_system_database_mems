@@ -68,6 +68,13 @@ class ImageService:
         return False
 
 
+def add_tag(name: str):
+    tag = Tag(name=name)
+    db.session.add(tag)
+    db.session.commit()
+    return tag
+
+
 class TagService:
     """
     Tag service need to processing with tag
@@ -84,36 +91,16 @@ class TagService:
             for key, name in i.items():
                 exist_tag = Tag.query.filter_by(name=name).first()
                 if not exist_tag:
-                    tag = self.add_tag(name)
+                    tag = add_tag(name)
                     tags.append(tag)
                 else:
                     tags.append(exist_tag)
         return tags
 
-    def add_tag(self, name: str):
-        tag = Tag(name=name)
-        db.session.add(tag)
-        db.session.commit()
-        return tag
-
 
 class Compress:
     ref_size = 300, 300
 
-    # def compress(self, link: str):
-    #     """
-    #     Функция принимающая на вход ширину и высоту и ссылку
-    #     картинки которую нужно сжать
-    #     """
-    #     image = Image.open(link)
-    #     width, height = image.size
-    #     ratio = width/height
-    #     if width > 1024 or height > 1024:
-    #         if width > height:
-    #             image = image.resize((1024, int(1024//ratio)), Image.ANTIALIAS)
-    #         else:
-    #             image = image.resize((int(1024*ratio), 1024), Image.ANTIALIAS)
-    #     image.save(link)
     def compress(self, link: str):
         """
         Функция принимающая на вход ширину и высоту и ссылку
@@ -121,9 +108,14 @@ class Compress:
         """
         image = Image.open(link)
         width, height = image.size
+        ratio = width/height
         if width > 1024 or height > 1024:
-            image = image.resize((1024, 1024), Image.ANTIALIAS)
+            if width > height:
+                image = image.resize((1024, int(1024//ratio)), Image.ANTIALIAS)
+            else:
+                image = image.resize((int(1024*ratio), 1024), Image.ANTIALIAS)
         image.save(link)
+
     @staticmethod
     def convert_picture(link: str):
         ref_size = 150
