@@ -189,10 +189,9 @@ class AvatarApi(Resource):
         parser.add_argument('id', required=True)
         parser.add_argument('picture', type=werkzeug.datastructures.FileStorage, location='files', required=True)
         params = parser.parse_args()
-        account = Account.query.filter_by(uid=params['id']).first()
-
-        image_link = service.save_avatar(params['picture'])
-        account.avatar = 'images/avatars/' + image_link
+        account: Account = Account.query.filter_by(uid=params['id']).first()
+        avatar = service.save_avatar(params['picture'])
+        account.set_avatar(avatar)
         db.session.add(account)
         db.session.commit()
         return Response('{}', 201)

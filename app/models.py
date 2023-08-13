@@ -3,12 +3,13 @@ from datetime import datetime
 from time import time
 
 import jwt
-from sqlalchemy import CheckConstraint
-from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login
-from flask import current_app as app
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
+from flask import current_app
+import pathlib
 
 @login.user_loader
 def load_user(id):
@@ -126,25 +127,31 @@ class Account(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def set_avatar(self, avatar_link):
+        if pathlib.Path(f'app/static/images/avatars/{avatar_link}').is_file():
+            self.avatar = avatar_link
+        print(pathlib.Path(f'static/images/avatars/{avatar_link}').resolve())
+        raise FileNotFoundError('Link to file does`t exists')
+
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
-            {'reset_password': self.id, 'exp': time() + expires_in},
-            app.config['SECRET_KEY'], algorithm='HS256')
+            {'reset_password': self.uid, 'exp': time() + expires_in},
+            current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            account = Account.query.get(jwt.decode(token, app.config['SECRET_KEY'],
-                                                   algorithms=['HS256'])['reset_password'])
-            print(account)
+            account = Account.query.filter_by(uid=jwt.decode(token, current_app.config['SECRET_KEY'],
+                                                   algorithms=['HS256'])['reset_password']).first()
             return account
-        except jwt.InvalidTokenError:
+        except jwt.InvalidTokenError as e:
+            print(e)
             # TODO: Добавить логирование
             return
     def __repr__(self):
         return f"Account: ('username': {self.username})," \
                f" ('date': {self.date})," \
-               f" ('picture': {self.avatar})," \
+               f" ('avatar': {self.avatar})," \
                f" ('amount': {self.amount}),"
 
 
@@ -163,7 +170,6 @@ class Mem(SearchableMixin, db.Model):
     view = db.Column(db.Integer, default=0, comment="Number of views")
     owner_id = db.Column(db.Integer, db.ForeignKey('account.id'))
     tags = db.relationship('Tag', secondary=mem_tag, backref=db.backref('mems'))
-
 
 
     def __eq__(self, other):

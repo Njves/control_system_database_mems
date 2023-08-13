@@ -25,7 +25,7 @@ moment = Moment()
 admin_app = Admin(name='Memateka', template_mode='bootstrap3')
 api_flask = Api()
 
-def create_app(config_class=Config, testing=False):
+def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     db.init_app(app)
@@ -57,7 +57,7 @@ def create_app(config_class=Config, testing=False):
 
     app.register_blueprint(msg_bp)
 
-    if not app.debug and testing:
+    if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:
             auth = None
             if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
@@ -86,7 +86,6 @@ def create_app(config_class=Config, testing=False):
         app.logger.info('Memateka startup')
 
     return app
-
 
 from app import models, api, admin
 
