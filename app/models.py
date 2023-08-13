@@ -200,11 +200,7 @@ class Tag(db.Model):
     def __repr__(self):
         return f"Tag: ('id': {self.id})," \
                f" ('name': {self.name})," \
-               f" ('date': {self.date})," \
-               f" ('uid': {self.uid}),"
-
-
-
+               f" ('date': {self.date}),"
 
 
 class Role(db.Model):
