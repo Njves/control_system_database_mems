@@ -18,11 +18,13 @@ def send_message(recipient):
         db.session.add(message)
         db.session.commit()
         flash('Your message has been sent')
-        return render_template('message/send_message.html')
-    return render_template('message/send_message.html')
+        return redirect(url_for('message.send_message', recipient=recipient))
+    return render_template('message/send_message.html', messages=Message.query.all())
 
 
 @bp.route('/messages/', methods=['GET'])
 @login_required
 def messages():
-    return render_template('message/messages.html', messages=Message.query.all())
+    accounts = Account.query.all()
+    accounts.remove(current_user)
+    return render_template('message/messages.html', accounts=accounts)

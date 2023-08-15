@@ -9,6 +9,9 @@ My message
 {% endblock %}
 
 {% block content %}
+{% for message in messages %}
+ {% include 'message/message.html' %}
+{% endfor %}
 <link href="{{ url_for('static', filename='style/message.css', v=1) }}" rel="stylesheet" />
 <div class="main">
     <form action="" method="POST" class="p-4 msg-form w-50">

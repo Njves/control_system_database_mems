@@ -6,12 +6,20 @@ My message
 My message
 {% endblock %}
 {% block content %}
-<div class="container">
-    {% for message in messages %}
-    {% include 'message/message.html' %}
-    {% endfor %}
+<div class="container-fluid w-50">
+    <form method="GET" action="">
+        <div class="form-group">
+            <label for="exampleInputQuery">Search user</label>
+            <input type="text" class="form-control" id="exampleInputQuery" aria-describedby="Query help" placeholder="Enter username">
+        </div>
+    </form>
+    <div class="list-group mt-2">
+        {% for account in accounts %}
+        <a href="{{ url_for('message.send_message', recipient=account.username) }}" class="list-group-item list-group-item-action">
+            {{ account.username }}
+        </a>
+        {% endfor %}
+    </div>
 </div>
-<a href="{{ url_for('message.send_message', recipient='halcyonika') }}" class="btn btn-primary"  type="button">Send message</a>
-
 
 {% endblock %}

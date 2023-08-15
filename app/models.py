@@ -1,15 +1,14 @@
+import pathlib
 import uuid
 from datetime import datetime
 from time import time
 
-import jwt
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db, login
+from app import db, login, jwt
 from app.search import add_to_index, remove_from_index, query_index
-from flask import current_app
-import pathlib
 
 @login.user_loader
 def load_user(id):
@@ -135,19 +134,29 @@ class Account(UserMixin, db.Model):
 
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
-            {'reset_password': self.uid, 'exp': time() + expires_in},
+            {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    @jwt.user_identity_loader
+    def user_identity_lookup(account):
+        return account.id
+
+    @jwt.user_lookup_loader
+    def user_lookup_callback(_jwt_header, jwt_data):
+        identity = jwt_data["sub"]
+        return Account.query.filter_by(id=identity).one_or_none()
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            account = Account.query.filter_by(uid=jwt.decode(token, current_app.config['SECRET_KEY'],
-                                                   algorithms=['HS256'])['reset_password']).first()
+            account = Account.query.get(jwt.decode(token, current_app.config['SECRET_KEY'],
+                                                   algorithms=['HS256'])['reset_password'])
             return account
         except jwt.InvalidTokenError as e:
             print(e)
             # TODO: Добавить логирование
             return
+
     def __repr__(self):
         return f"Account: ('username': {self.username})," \
                f" ('date': {self.date})," \

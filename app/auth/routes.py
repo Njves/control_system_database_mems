@@ -1,4 +1,6 @@
-from flask import render_template, request, url_for, flash
+from email_validator import validate_email, EmailNotValidError
+from flask import render_template, request, url_for, flash, Response
+from flask.views import MethodView
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
 
@@ -23,6 +25,11 @@ def register():
         user_account = Account(username=username, email=email)
         if Account.query.filter_by(username=user_account.username).first():
             flash('Такой пользователь уже существует')
+            return redirect(url_for('auth.register'))
+        try:
+            validate_email(email, check_deliverability=False)
+        except EmailNotValidError as e:
+            flash('Невалидный email')
             return redirect(url_for('auth.register'))
         user_account.set_password(password)
         db.session.add(user_account)

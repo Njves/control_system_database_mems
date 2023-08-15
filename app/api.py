@@ -34,9 +34,9 @@ class UploadImage(Resource):
 
         image_file = params['image']
         filename = service.save(image_file)
-        lnk = ImageService.IMG_PATH + filename
+        link = ImageService.IMG_PATH + filename
         account = Account.query.filter_by(uid=params['owner_id']).first()
-        meme = Mem(name="", link=lnk, description="", status=0, uid=str(uuid.uuid4()), owner=account)
+        meme = Mem(name="", link=link, description="", status=0, uid=str(uuid.uuid4()), owner=account)
         db.session.add(meme)
         db.session.add(account)
         db.session.commit()

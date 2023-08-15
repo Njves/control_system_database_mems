@@ -30,3 +30,4 @@ htmlcov/
 /app/static/images/avatars/*
 migrations
 __pycache__
+logs/*

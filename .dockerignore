@@ -1,2 +1,3 @@
 app/static/images/*
 csdmenv.env
+logs/*
