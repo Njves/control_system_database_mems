@@ -6,7 +6,6 @@ from logging.handlers import SMTPHandler
 from elasticsearch import Elasticsearch
 from flask import Flask
 from flask_admin import Admin
-from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -25,8 +24,6 @@ mail = Mail()
 moment = Moment()
 admin_app = Admin(name='Memateka', template_mode='bootstrap3')
 api_flask = Api()
-jwt = JWTManager()
-
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -37,7 +34,6 @@ def create_app(config_class=Config):
     mail.init_app(app)
     moment.init_app(app)
     admin_app.init_app(app)
-    jwt.init_app(app)
     app.elasticsearch = Elasticsearch([app.config.get('ES_ENDPOINT')]) if app.config.get('ES_ENDPOINT') else None
 
     from app.auth import bp as auth_bp
@@ -87,8 +83,9 @@ def create_app(config_class=Config):
 
         app.logger.setLevel(logging.INFO)
         app.logger.info('Memateka startup')
-
     return app
+
+
 
 from app import models, api, admin
 

@@ -141,7 +141,6 @@ class MemeApi(Resource):
         Response data:
             mem: str - mem json
         """
-
         parser = reqparse.RequestParser()
         parser.add_argument('id')
         parser.add_argument('status')

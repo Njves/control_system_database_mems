@@ -17,8 +17,6 @@ def send_message(recipient):
         message = Message(author=current_user, recipient=account, body=form['text'])
         db.session.add(message)
         db.session.commit()
-        flash('Your message has been sent')
-        return redirect(url_for('message.send_message', recipient=recipient))
     return render_template('message/send_message.html', messages=Message.query.all())
 
 

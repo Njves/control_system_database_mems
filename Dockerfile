@@ -5,8 +5,7 @@ RUN adduser -D memateka
 WORKDIR /home/memateka
 
 COPY requirements.txt requirements.txt
-RUN install -r requirements.txt
-RUN install gunicorn
+RUN pip install -r requirements.txt && pip install gunicorn
 
 COPY app app
 COPY migrations migrations

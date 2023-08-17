@@ -29,5 +29,4 @@ def index():
     if query:
         memes, total = Mem.search(query)
         memes = memes.all()
-
     return render_template('public/public.html', mems=memes, query=query, sort_name=sort_name)

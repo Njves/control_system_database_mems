@@ -1,13 +1,14 @@
 import pathlib
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 
+import jwt
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db, login, jwt
+from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
 
 @login.user_loader
@@ -104,6 +105,10 @@ class Account(UserMixin, db.Model):
                                         backref='recipient', lazy='dynamic')
     last_message_read_time = db.Column(db.DateTime)
 
+    token = db.Column(db.String(32), index=True, unique=True)
+
+    token_expiration = db.Column(db.DateTime)
+
     def new_messages(self):
         last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
         return Message.query.filter_by(recipient=self).filter(
@@ -137,14 +142,29 @@ class Account(UserMixin, db.Model):
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
-    @jwt.user_identity_loader
-    def user_identity_lookup(account):
-        return account.id
+    def generate_jwt_token(self):
+        secret_key = current_app.config.get('SECRET_KEY')
+        expiration_time = datetime.utcnow() + timedelta(
+            days=365)
 
-    @jwt.user_lookup_loader
-    def user_lookup_callback(_jwt_header, jwt_data):
-        identity = jwt_data["sub"]
-        return Account.query.filter_by(id=identity).one_or_none()
+        payload = {
+            "user_id": self.id,
+            "exp": expiration_time
+        }
+
+        token = jwt.encode(payload, secret_key, algorithm="HS256")
+        return token.decode("utf-8")
+
+    @staticmethod
+    def verify_jwt_token(token):
+        try:
+            secret_key = current_app.config.get('SECRET_KEY')
+            decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
+            return decoded_token
+        except jwt.ExpiredSignatureError:
+            return None  # Токен истек
+        except jwt.InvalidTokenError:
+            return None  # Недействительный токен
 
     @staticmethod
     def verify_reset_password_token(token):
@@ -205,6 +225,7 @@ class Tag(db.Model):
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
     __searchable__ = ['name']
+
 
     def __repr__(self):
         return f"Tag: ('id': {self.id})," \

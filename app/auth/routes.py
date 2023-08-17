@@ -1,6 +1,7 @@
 from email_validator import validate_email, EmailNotValidError
-from flask import render_template, request, url_for, flash, Response
+from flask import render_template, request, url_for, flash, Response, make_response, g
 from flask.views import MethodView
+from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
 
@@ -9,6 +10,29 @@ from app.auth import bp
 from app.email import send_password_reset_email
 from app.models import Account
 
+basic_auth = HTTPBasicAuth()
+token_auth = HTTPTokenAuth()
+
+@basic_auth.verify_password
+def verify_password(username, password):
+    user = Account.query.filter_by(username=username).first()
+    if user is None:
+        return False
+    g.current_user = user
+    return user.check_password(password)
+
+@basic_auth.error_handler
+def basic_auth_error():
+    return make_response()
+
+@token_auth.verify_token
+def verify_token(token):
+    g.current_user = Account.check_token(token) if token else None
+    return g.current_user is not None
+
+@token_auth.error_handler
+def token_auth_error():
+    return make_response()
 
 @bp.route('/register', methods=['POST', 'GET'])
 def register():
@@ -36,7 +60,9 @@ def register():
         db.session.commit()
         login_user(user_account)
         flash("Вы успешно вошли!")
-        return redirect(url_for('main.index'))
+        response = Response()
+        response.headers.add("Authorization", user_account.generate_jwt_token())
+        return redirect(url_for('main.index'), Response=response)
     return render_template('auth/register.html')
 
 @bp.route('/login', methods=['POST', 'GET'])

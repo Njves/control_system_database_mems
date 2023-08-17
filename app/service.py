@@ -68,11 +68,6 @@ class ImageService:
         return False
 
 
-def add_tag(name: str):
-    tag = Tag(name=name)
-    db.session.add(tag)
-    db.session.commit()
-    return tag
 
 
 class TagService:
@@ -91,10 +86,12 @@ class TagService:
             for key, name in i.items():
                 exist_tag = Tag.query.filter_by(name=name).first()
                 if not exist_tag:
-                    tag = add_tag(name)
+                    tag = Tag(name=name)
+                    db.session.add(tag)
                     tags.append(tag)
                 else:
                     tags.append(exist_tag)
+        db.session.commit()
         return tags
 
 
@@ -128,24 +125,4 @@ class Compress:
             new_width = (width * ref_size) // height
             image = image.resize((new_width, ref_size), Image.ANTIALIAS)
         image.save(link)
-
-
-class Query:
-    def get_memes(self, current_id, query, sort_name):
-        if current_id:
-            memes_query = Mem.query.filter_by(owner_id=current_id).order_by(Mem.date.asc())
-        else:
-            memes_query = Mem.query.filter_by(status=1)
-        sort_various = {'by_title': memes_query.order_by(asc(Mem.name)),
-                        'by_likes': memes_query.order_by(desc(Mem.likes)),
-                        'by_view': memes_query.order_by(desc(Mem.view))}
-        found_tagged_mem = []
-
-        if sort_name:
-            memes_query = sort_various.get(sort_name, '')
-        memes = memes_query.all()
-        for i in found_tagged_mem:
-            if i not in memes:
-                memes.append(i)
-        return memes
 

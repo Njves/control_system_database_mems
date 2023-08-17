@@ -15,7 +15,7 @@ services:
       test: ["CMD-SHELL", "pg_isready", "-d", "csdm"]
 
   backend:
-    image: njves/memateka:latest
+    image: memateka:latest
     environment:
       SECRET_KEY: some-secret
       MAIL_SERVER: smtp.googlemail.com
