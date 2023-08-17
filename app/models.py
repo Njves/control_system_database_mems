@@ -105,7 +105,7 @@ class Account(UserMixin, db.Model):
                                         backref='recipient', lazy='dynamic')
     last_message_read_time = db.Column(db.DateTime)
 
-    token = db.Column(db.String(32), index=True, unique=True)
+    token = db.Column(db.String(128), index=True, unique=True)
 
     token_expiration = db.Column(db.DateTime)
 
@@ -143,6 +143,8 @@ class Account(UserMixin, db.Model):
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
     def generate_jwt_token(self):
+        if self.token_expiration and datetime.utcnow() < self.token_expiration:
+            return self.token
         secret_key = current_app.config.get('SECRET_KEY')
         expiration_time = datetime.utcnow() + timedelta(
             days=365)
@@ -151,9 +153,12 @@ class Account(UserMixin, db.Model):
             "user_id": self.id,
             "exp": expiration_time
         }
-
+        self.token_expiration = expiration_time
         token = jwt.encode(payload, secret_key, algorithm="HS256")
-        return token.decode("utf-8")
+        self.token = token
+        db.session.add(self)
+        db.session.commit()
+        return token
 
     @staticmethod
     def verify_jwt_token(token):

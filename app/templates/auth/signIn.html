@@ -22,7 +22,7 @@ Login
 {% endif %}
 {% endwith %}
 <div class="container">
-    <form action="login" method="post">
+    <form action="{{ url_for('auth.login') }}" method="POST">
         <div class="form-group">
             <p class="text-center">Sign in to CSDM</p>
         </div>
@@ -37,7 +37,6 @@ Login
                 <a href="{{ url_for('auth.forgot_password') }}">Forgot password?</a>
                 <div class="button-wrapper">
                     <button class="btn btn-success" type="submit">Sign in</button>
-
                 </div>
                 <a href="{{ url_for('auth.register') }}">Create an account</a>
             </div>

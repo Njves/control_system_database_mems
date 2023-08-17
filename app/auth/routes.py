@@ -60,9 +60,9 @@ def register():
         db.session.commit()
         login_user(user_account)
         flash("Вы успешно вошли!")
-        response = Response()
-        response.headers.add("Authorization", user_account.generate_jwt_token())
-        return redirect(url_for('main.index'), Response=response)
+        response = redirect(url_for('main.index'))
+        response.headers.add('Authorization', user_account.generate_jwt_token())
+        return response
     return render_template('auth/register.html')
 
 @bp.route('/login', methods=['POST', 'GET'])
@@ -80,7 +80,9 @@ def login():
             return redirect(url_for("auth.login"))
         login_user(user_account)
         flash("Success!")
-        return redirect(url_for('main.index'))
+        response = redirect(url_for('main.index'))
+        response.headers.add('Authorization', user_account.generate_jwt_token())
+        return response
     return render_template('auth/signIn.html')
 
 @bp.route('/forgot_password', methods=['POST', 'GET'])

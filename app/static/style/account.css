@@ -17,6 +17,48 @@ nav {
     padding: 20px 5% 0 5%;
 }
 
+@media (max-width: 1919px) {
+    .col {
+        max-width: 20%;
+    }
+}
+
+@media (max-width: 1599px) {
+    .col {
+        max-width: 25%;
+    }
+}
+
+@media (max-width: 1279px) {
+    .col {
+        max-width: 33.333333%;
+    }
+}
+
+@media (max-width: 959px) {
+    .col {
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 639px) {
+    .col {
+        max-width: 100%;
+    }
+}
+
+.col {
+    display: flex;
+    max-width: 16.666666%;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.containerTags {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .profile img  {
     border-radius: 50%;
     max-width: 100px;
@@ -44,8 +86,8 @@ nav {
 }
 
 .name, .added {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 .toolsSearch {

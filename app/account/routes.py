@@ -10,7 +10,9 @@ from app.models import Mem
 def account():
     query = request.args.get('query', default='')
     sort_name = request.args.get('sort', default='')
+    memes = Mem.query.all()
     if query:
         memes, total = Mem.search(query)
         memes = memes.all()
+
     return render_template('account/account.html', mems=memes, query=query, sort_name=sort_name)

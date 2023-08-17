@@ -1,5 +1,6 @@
 import unittest
 
+import freezegun
 from flask import url_for
 
 from app import create_app, db
@@ -58,6 +59,18 @@ class TestRegistration(unittest.TestCase):
         response = self.client.post(url_for('auth.register'), data=data)
         self.assertEqual(response.status_code, 302)
 
+    def test_registration_auth_contains(self):
+        data = {
+            "username": "test_user",
+            "password": "password123",
+            "password_repeat": "password123",
+            "email": "test@example.com"
+        }
+        response = self.client.post(url_for('auth.register', _external=True), data=data)
+        self.assertTrue(response.headers.get('Authorization'))
+        self.assertFalse(response.headers.get('Unauthorization'))
+
+
 class TestLogin(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestConfig)
@@ -65,9 +78,9 @@ class TestLogin(unittest.TestCase):
         self.app_context.push()
         self.client = self.app.test_client()
         db.create_all()
-        account = Account(username='Test', email='Test@gmail.com')
-        account.set_password('test')
-        db.session.add(account)
+        self.account = Account(username='Test', email='Test@gmail.com')
+        self.account.set_password('test')
+        db.session.add(self.account)
         db.session.commit()
 
     def tearDown(self):
@@ -89,4 +102,22 @@ class TestLogin(unittest.TestCase):
         response = self.client.post(url_for('auth.login'), data={'username_email': 'invalid@gmail.com', 'password': 'test'})
         self.assertEqual(response.status_code, 302)
 
+    def test_login_auth_equal_auth(self):
+        response = self.client.post(url_for('auth.login'),
+                                    data={'username_email': 'Test', 'password': 'test'})
+        self.assertEqual(response.headers.get('Authorization'), self.account.token)
 
+
+    def test_login_auth_failed_expiration_time(self):
+        response = self.client.post(url_for('auth.login'),
+                                    data={'username_email': 'Test', 'password': 'test'})
+        previous_token = response.headers.get('Authorization')
+        self.assertTrue(previous_token is not None)
+        # Истек на год и день
+        freeze = freezegun.freeze_time('2024-08-19')
+        self.assertEqual(response.headers.get('Authorization'), previous_token)
+        freeze.start()
+        response = self.client.post(url_for('auth.login'),
+                                    data={'username_email': 'Test', 'password': 'test'})
+        self.assertNotEqual(response.headers.get('Authorization'), previous_token)
+        freeze.stop()

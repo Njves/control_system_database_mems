@@ -97,8 +97,8 @@ My account
     <div class="containerTags">
         {% for i in mems %}
         <div class="col">
-            <div class="card w-100">
-                <img class="img-fluid" src="{{ i.link }}" alt="Card image cap" style="object-fit: cover;">
+            <div class="card">
+                <img  src="{{ i.link }}" alt="Card image cap" style="object-fit: cover;">
                 <div class="card-body">
                     {% if i.name %}
                     <h5 class="card-title">{{ i.name }}</h5>
